@@ -1,0 +1,21 @@
+{
+    "name": "David",
+    "API_KEY": "Fh8JhgtmVM6RyazesS0sl9IkMWPD7KLXqF8Gz0E5CJRlgDt4rgry2EJDYajeebZM", 
+    "API_SECRET": "RSvGFTiUXGwTS1b1JrCm3p92wNF9lJi3e80xcrpJDmAHiIATGglPtp8PLYqmsaWJ", 
+    "portfolios": [  
+        {
+            "assets":{"BNB":"2", "BTC":"0.01"},
+            "orders":{},
+            "start_balance":"200",
+            "info":
+            {"first_name":"Omri", "last_name":"Haham","email":"omri93h@gmail.com", "phone":"0526999779", "date_join": "2021-01-10"}
+        },
+        {
+            "assets":{"BNB":"1", "BTC":"0.003"},
+            "orders":{},
+            "start_balance":"80",
+            "info":
+            {"first_name":"Shimi", "last_name":"Shimoni","email":"shimshim@gmail.com", "phone":"0546999779", "date_join": "2021-01-11"}
+        }
+]
+}
