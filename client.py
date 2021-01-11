@@ -1,5 +1,3 @@
-import json
-import os.path as path
 import datetime
 
 
@@ -16,7 +14,12 @@ class Client:
         self.email = email
         self.phone = phone
 
+    def setName(self, first_name, last_name):
+        self.first_name = first_name
+        self.last_name = last_name
 
-client = Client("Aba", "Shimon", "Abashimon@gmail.com", "052-0000000")
-print(client.date_join)
-pass
+    def setPhone(self, phone_number):
+        self.phone = phone_number
+
+    def setEmail(self, email):
+        self.email = email
