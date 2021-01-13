@@ -2,6 +2,8 @@
     "name": "David",
     "API_KEY": "Fh8JhgtmVM6RyazesS0sl9IkMWPD7KLXqF8Gz0E5CJRlgDt4rgry2EJDYajeebZM",
     "API_SECRET": "RSvGFTiUXGwTS1b1JrCm3p92wNF9lJi3e80xcrpJDmAHiIATGglPtp8PLYqmsaWJ",
+    "username": "root",
+    "password": "qwerty",
     "portfolios": [
         {
             "id": 1,
