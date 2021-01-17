@@ -1,7 +1,10 @@
 import json
 import os.path as path
-from portfolio import Portfolio
+
 from binance.client import Client as binance_client
+
+from portfolio import *
+
 
 
 class Broker:
@@ -101,5 +104,4 @@ class Broker:
 
 
 broker = Broker()
-broker.deletePortfolio(4)
 pass

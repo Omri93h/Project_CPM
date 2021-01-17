@@ -152,6 +152,4 @@ entry_ApiSecret.bind(
     '<Return>', (lambda event: clickRegister(label_registerMsg)))
 
 
-
-
 window.mainloop()
