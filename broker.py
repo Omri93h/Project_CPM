@@ -44,6 +44,7 @@ class Broker:
         else:
             return {}
 
+
     def saveData(self):
         broker_data = {
             'name': self.name,
@@ -68,6 +69,7 @@ class Broker:
         with open("broker_data.json", 'w') as json_file:
             json.dump(broker_data, json_file)
 
+    # creating protfoio objects from list of json  
     def parsePortfolios(self, portfolios):
         for portfolio in portfolios:
             parsed_portfolio = Portfolio().Exist(portfolio)
@@ -79,7 +81,6 @@ class Broker:
                 del self.portfolios[i]
                 self.saveData()
                 return
-
         print(f"Could Not Find Portfolio ID {portfolio_id}")
 
     def addPortfolio(self, start_balance, first_name, last_name, email, phone):
@@ -100,6 +101,14 @@ class Broker:
         return max_id + 1
 
 
+
+
 broker = Broker()
-broker.deletePortfolio(4)
-pass
+
+
+order = broker.binance_client.order_market_buy(symbol='IOTABTC',quantity=20)
+
+print(order)
+
+# broker.deletePortfolio(4)
+# pass

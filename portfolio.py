@@ -51,7 +51,10 @@ class Portfolio(object):
     def buyOrder(self, binance_user, base_asset, quote_asset, amount):
         order = binance_user.order_market_buy()
 
+
     def addToOrders(self, order_id, status, base_asset, quote_asset, amount):
         order = {"order_id": order_id, "status": status,
                  "base_asset": base_asset, "quote_asset": quote_asset, "amount": amount}
         self.orders.append(order)
+
+
