@@ -3,8 +3,7 @@ import os.path as path
 
 from binance.client import Client as binance_client
 
-from portfolio import *
-
+from .portfolio import *
 
 
 class Broker:
@@ -85,6 +84,9 @@ class Broker:
 
         print(f"Could Not Find Portfolio ID {portfolio_id}")
 
+    def getTotalBalances(self):
+        return self.binance_client.get_account()['balances']
+
     def addPortfolio(self, start_balance, first_name, last_name, email, phone):
         id = self.getMaxPortfolioID()
         new_portfolio = Portfolio().New(
@@ -102,6 +104,19 @@ class Broker:
                 max_id = portfolio.id
         return max_id + 1
 
+    def getAllTickers(self):
+        return self.binance_client.get_all_tickers()
 
-broker = Broker()
-pass
+    def getTotalUsdValue(self):
+        total = 0
+        for asset in self.getTotalBalances():
+            total_asset_balance = float(asset['free']) + float(asset['locked'])
+            for symbol in self.getAllTickers():
+                if symbol['symbol'] == asset['asset'] + 'USDT':
+                    total += total_asset_balance * float(symbol['price'])
+        return total
+
+
+    # orders_history = []
+    # for symbol in all_prices:
+    # orders_history.append(broker.binance_client.get_all_orders(symbol = symbol['symbol']))

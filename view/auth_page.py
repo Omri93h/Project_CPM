@@ -40,7 +40,7 @@ def getUsernameAndPassword():
 
 
 def clickRegister(label_registerMsg):
-    pass
+    pass #TO DO ..........
 
 
 def clickLogin(label_connectionMsg):
