@@ -1,0 +1,42 @@
+{
+    "id": 1,
+    "start_balance": "200",
+    "assets": {
+        "BNB": "2",
+        "BTC": "0.01"
+    },
+    "orders": [],
+    "client": {
+        "first_name": "Omri",
+        "last_name": "Haham",
+        "phone": "0526999779",
+        "email": "omri93h@gmail.com"
+    }
+},
+{
+    "id": 2,
+    "start_balance": "80",
+    "assets": {
+        "BNB": "1",
+        "BTC": "0.003"
+    },
+    "orders": [],
+    "client": {
+        "first_name": "Shimi",
+        "last_name": "Shimoni",
+        "phone": "0546999779",
+        "email": "shimshim@gmail.com"
+    }
+},
+{
+    "id": 5,
+    "start_balance": 1200,
+    "assets": {},
+    "orders": [],
+    "client": {
+        "first_name": "Yosi",
+        "last_name": "Williams",
+        "phone": "0526123456",
+        "email": "yossiwill@gmail.com"
+    }
+}
