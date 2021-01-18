@@ -10,5 +10,9 @@ class Controller():
         newPortData = portfolioForm()
         self.broker.addPortfolio(newPortData)
 
+    def run():
+        
+
+
     
 
