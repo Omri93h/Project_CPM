@@ -40,7 +40,7 @@ def getUsernameAndPassword():
 
 
 def clickRegister(label_registerMsg):
-    pass
+    pass #TO DO ..........
 
 
 def clickLogin(label_connectionMsg):
@@ -150,8 +150,6 @@ entry_ApiSecret = EntryWithPlaceholder(
 entry_ApiSecret.grid(row=3, column=2, padx=(0, 50), pady=5)
 entry_ApiSecret.bind(
     '<Return>', (lambda event: clickRegister(label_registerMsg)))
-
-
 
 
 window.mainloop()
