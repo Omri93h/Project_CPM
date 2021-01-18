@@ -14,6 +14,18 @@
                 "phone": "23124324",
                 "email": "ASDSD@ADA.SD"
             }
+        },
+        {
+            "id": 2,
+            "start_balance": "32",
+            "assets": {},
+            "orders": [],
+            "client": {
+                "first_name": "dsd",
+                "last_name": "fw",
+                "phone": "5342267757",
+                "email": "fdwef@dcwd.22"
+            }
         }
     ]
 }

@@ -1,5 +1,7 @@
 
 
+# to add validations
+
 def portfolioForm():
     portfolioData = {}
     print("To add new portfolio  - fill up the new portfolio data please")

@@ -13,8 +13,8 @@ def main():
     # total_usd_value = Controller.broker.getTotalUsdValue()
 
     
-    Controller.addPortfolio()
-
+    # Controller.addPortfolio()
+    Controller.run()
     pass
 
 
