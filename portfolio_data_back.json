@@ -1,4 +1,4 @@
-{
+[{
     "id": 1,
     "start_balance": "200",
     "assets": {
@@ -39,4 +39,4 @@
         "phone": "0526123456",
         "email": "yossiwill@gmail.com"
     }
-}
+}]
