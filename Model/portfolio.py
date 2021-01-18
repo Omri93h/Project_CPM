@@ -14,13 +14,13 @@ class Portfolio(object):
         self.id = -1
 
     # constructor A
-    def New(self, id, start_balance, first_name, last_name, email, phone):
-        self.start_balance = start_balance
-        self.current_balance = start_balance
-        self.client = Client(first_name, last_name, email, phone)
+    def New(self, newPortData):
+        self.start_balance = newPortData["start_balance"]
+        self.current_balance = newPortData["start_balance"]
+        self.client = Client(newPortData["first_name"], newPortData["last_name"], newPortData["email"], newPortData["phone"])
         self.orders = []
         self.assets = {}
-        self.id = id
+        self.id = newPortData["id"]
         return self
 
     # constructor B

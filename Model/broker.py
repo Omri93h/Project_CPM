@@ -35,7 +35,7 @@ class Broker:
         self.name = input("Name: ")  # WILL CHANGED IN VIEW
         self.API_KEY = input("API_KEY: ")
         self.API_SECRET = input("API_SECRET: ")
-        self.portfolios = {}
+        self.portfolios = []
 
         saveData()
 
@@ -88,10 +88,10 @@ class Broker:
     def getTotalBalances(self):
         return self.binance_client.get_account()['balances']
 
-    def addPortfolio(self, start_balance, first_name, last_name, email, phone):
+    def addPortfolio(self, newPortData):
         id = self.getMaxPortfolioID()
-        new_portfolio = Portfolio().New(
-            id, start_balance, first_name, last_name, email, phone)
+        newPortData["id"] = id
+        new_portfolio = Portfolio().New(newPortData)
         self.portfolios.append(new_portfolio)
         self.saveData()
 
@@ -122,12 +122,12 @@ class Broker:
 
 
 
-broker = Broker()
+# broker = Broker()
 
 
-order = broker.binance_client.order_market_buy(symbol='IOTABTC',quantity=20)
+# order = broker.binance_client.order_market_buy(symbol='IOTABTC',quantity=20)
 
-print(order)
+# print(order)
 
 # broker.deletePortfolio(4)
 # pass
