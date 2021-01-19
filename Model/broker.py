@@ -22,6 +22,7 @@ class Broker:
                 self.API_KEY = broker_data["API_KEY"]
                 self.API_SECRET = broker_data["API_SECRET"]
                 self.Total_Balance =broker_data["Total_Balance"]
+                self.next_portfolio_id = broker_data["next_portfolio_id"]
                 self.portfolios = []
                 self.parsePortfolios(broker_data["portfolios"])
                 self.binance_client = binance_client(
@@ -37,6 +38,8 @@ class Broker:
         self.API_KEY = input("API_KEY: ")
         self.API_SECRET = input("API_SECRET: ")
         self.Total_Balance = int(input("Total_Balance: "))    ### ###   to change -check the aktual balance 
+                                                            ### get Total Usd value ??
+        self.next_portfolio_id = 0
         self.portfolios = []
 
         saveData()
@@ -54,7 +57,8 @@ class Broker:
             'name': self.name,
             'API_KEY': self.API_KEY,
             'API_SECRET': self.API_SECRET,
-            'Total_Balance':self.Total_Balance
+            'Total_Balance':self.Total_Balance,
+            'next_portfolio_id' : self.next_portfolio_id
         }
         portfolios = []
         for portfolio in self.portfolios:
@@ -92,21 +96,22 @@ class Broker:
         return self.binance_client.get_account()['balances']
 
     def addPortfolio(self, newPortData):
-        id = self.getMaxPortfolioID()
+        id = self.next_portfolio_id
+        self.next_portfolio_id += 1
         newPortData["id"] = id
         new_portfolio = Portfolio().New(newPortData)
         self.portfolios.append(new_portfolio)
         self.saveData()
 
-    def getMaxPortfolioID(self):
-        if self.portfolios == []:
-            return 1  # first portfolio id
+    # def getMaxPortfolioID(self):
+    #     if self.portfolios == []:
+    #         return 1  # first portfolio id
 
-        max_id = 1
-        for portfolio in self.portfolios:
-            if portfolio.id > max_id:
-                max_id = portfolio.id
-        return max_id + 1
+    #     max_id = 1
+    #     for portfolio in self.portfolios:
+    #         if portfolio.id > max_id:
+    #             max_id = portfolio.id
+    #     return max_id + 1
 
     def getAllTickers(self):
         return self.binance_client.get_all_tickers()
@@ -121,6 +126,17 @@ class Broker:
                 if symbol['symbol'] == asset['asset'] + 'USDT':
                     total += total_asset_balance * float(symbol['price'])
         return total
+
+
+    def getPortfoliioByID(self,id):
+        if self.portfolios == []:
+            return None
+        for portFolio in self.portfolios :
+            if portFolio.id == id:
+                return portFolio
+        return None
+          
+
 
 
 

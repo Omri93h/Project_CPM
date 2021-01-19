@@ -5,8 +5,14 @@ class Controller():
     def __init__(self):
         self.broker = Broker()
         self.view = View()
-        self.dashChoice = {2:self.addPortfolio}
+        self.dashChoice = {1:self.viewportfolio ,2:self.addPortfolio , 6:"exit"}
         
+
+    def viewportfolio(self):
+        portfolio_id = self.view.choosePortfolioById()
+        portFolio = self.broker.getPortfoliioByID(portfolio_id)
+        self.view.viewPortfolio(portFolio)      
+
 
     def addPortfolio(self):
         try :
@@ -27,9 +33,15 @@ class Controller():
 
     def run(self):
         # authorize
-        runDashChoice = self.dashChoice[self.dashboard()]
-        runDashChoice()
-
+        while (1):
+            DashChoice = self.dashboard()
+            if DashChoice in self.dashChoice :
+                runDashChoice = self.dashChoice[DashChoice]
+                if runDashChoice == "exit":
+                    break                         ## ?return
+                runDashChoice()
+            else :
+                print("This option doesn't exist")
 
 
     

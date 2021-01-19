@@ -29,8 +29,11 @@ class View :
         # to do more validations
         return portfolioData
 
+    def choosePortfolioById(self):
+        return int(input("Portfolio id : "))
+
     def viewPortfolio(self,portfolioData):
-        pass
+        print("client first name : " , portfolioData.client.first_name)
 
 
     def makeMarketOrder(self):
@@ -42,6 +45,7 @@ class View :
         newOrder["Type"] =  orderType
         newOrder["symbol"] = input("symbol : ")
         newOrder["quantity"] = input("quantity : ") 
+        ## need validations  ....
 
 
 
