@@ -21,6 +21,7 @@ class Broker:
                 self.name = broker_data['name']
                 self.API_KEY = broker_data["API_KEY"]
                 self.API_SECRET = broker_data["API_SECRET"]
+                self.Total_Balance =broker_data["Total_Balance"]
                 self.portfolios = []
                 self.parsePortfolios(broker_data["portfolios"])
                 self.binance_client = binance_client(
@@ -35,6 +36,7 @@ class Broker:
         self.name = input("Name: ")  # WILL CHANGED IN VIEW
         self.API_KEY = input("API_KEY: ")
         self.API_SECRET = input("API_SECRET: ")
+        self.Total_Balance = int(input("Total_Balance: "))    ### ###   to change -check the aktual balance 
         self.portfolios = []
 
         saveData()
@@ -52,6 +54,7 @@ class Broker:
             'name': self.name,
             'API_KEY': self.API_KEY,
             'API_SECRET': self.API_SECRET,
+            'Total_Balance':self.Total_Balance
         }
         portfolios = []
         for portfolio in self.portfolios:

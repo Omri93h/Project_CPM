@@ -9,15 +9,18 @@ class Controller():
         
 
     def addPortfolio(self):
-        newPortData = portfolioForm()
-        self.broker.addPortfolio(newPortData)
+        try :
+            newPortData = self.view.portfolioForm(self.broker.Total_Balance)
+            self.broker.addPortfolio(newPortData)
+        except Exception as e:
+                print(e)              
       
 
     def dashboard(self):
         choice = None
         while choice is None:
             try:           
-                choice = dashboardView()
+                choice = self.view.dashboardView()
             except Exception as e:
                 print(e)                
         return choice
