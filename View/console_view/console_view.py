@@ -19,7 +19,7 @@ class View :
     def portfolioForm(self,max_start_balance):
         portfolioData = {}
         print("To add new portfolio  - fill up the new portfolio data please")
-        portfolioData["start_balance"] = int(input("start_balance : "))
+        portfolioData["start_balance"] = float(input("start_balance : "))
         if portfolioData["start_balance"] > max_start_balance or portfolioData["start_balance"] <0:
             raise Exception("Invalid start_balance")
         portfolioData["first_name"] = input("first_name : ")

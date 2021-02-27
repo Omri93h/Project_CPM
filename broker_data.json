@@ -3,7 +3,7 @@
     "API_KEY": "Fh8JhgtmVM6RyazesS0sl9IkMWPD7KLXqF8Gz0E5CJRlgDt4rgry2EJDYajeebZM",
     "API_SECRET": "RSvGFTiUXGwTS1b1JrCm3p92wNF9lJi3e80xcrpJDmAHiIATGglPtp8PLYqmsaWJ",
     "Total_Balance": 100,
-    "next_portfolio_id" : 4,
+    "next_portfolio_id": 5,
     "portfolios": [
         {
             "id": 1,
@@ -39,6 +39,18 @@
                 "last_name": "Haham",
                 "phone": "657868768",
                 "email": "jkhkj"
+            }
+        },
+        {
+            "id": 4,
+            "start_balance": 99.0,
+            "assets": {},
+            "orders": [],
+            "client": {
+                "first_name": "Shimi",
+                "last_name": "Shimoni",
+                "phone": "0526999779",
+                "email": "s@gmail.com"
             }
         }
     ]
