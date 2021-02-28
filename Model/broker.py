@@ -19,9 +19,11 @@ class Broker:
         if broker_data != {}:
             try:
                 self.name = broker_data['name']
+                self.username = broker_data['username']
+                self.password = broker_data['password']
                 self.API_KEY = broker_data["API_KEY"]
                 self.API_SECRET = broker_data["API_SECRET"]
-                self.Total_Balance =broker_data["Total_Balance"]
+                self.total_balance = broker_data["total_balance"]
                 self.next_portfolio_id = broker_data["next_portfolio_id"]
                 self.portfolios = []
                 self.parsePortfolios(broker_data["portfolios"])
@@ -37,8 +39,9 @@ class Broker:
         self.name = input("Name: ")  # WILL CHANGED IN VIEW
         self.API_KEY = input("API_KEY: ")
         self.API_SECRET = input("API_SECRET: ")
-        self.Total_Balance = int(input("Total_Balance: "))    ### ###   to change -check the aktual balance 
-                                                            ### get Total Usd value ??
+        # to change -check the aktual balance
+        self.total_balance = int(input("Total Balance: "))
+        # get Total Usd value ??
         self.next_portfolio_id = 0
         self.portfolios = []
 
@@ -51,14 +54,13 @@ class Broker:
         else:
             return {}
 
-
     def saveData(self):
         broker_data = {
             'name': self.name,
             'API_KEY': self.API_KEY,
             'API_SECRET': self.API_SECRET,
-            'Total_Balance':self.Total_Balance,
-            'next_portfolio_id' : self.next_portfolio_id
+            'total_balance': self.total_balance,
+            'next_portfolio_id': self.next_portfolio_id
         }
         portfolios = []
         for portfolio in self.portfolios:
@@ -78,7 +80,7 @@ class Broker:
         with open("broker_data.json", 'w') as json_file:
             json.dump(broker_data, json_file)
 
-    # creating protfoio objects from list of json  
+    # creating protfoio objects from list of json
     def parsePortfolios(self, portfolios):
         for portfolio in portfolios:
             parsed_portfolio = Portfolio().Exist(portfolio)
@@ -103,16 +105,6 @@ class Broker:
         self.portfolios.append(new_portfolio)
         self.saveData()
 
-    # def getMaxPortfolioID(self):
-    #     if self.portfolios == []:
-    #         return 1  # first portfolio id
-
-    #     max_id = 1
-    #     for portfolio in self.portfolios:
-    #         if portfolio.id > max_id:
-    #             max_id = portfolio.id
-    #     return max_id + 1
-
     def getAllTickers(self):
         return self.binance_client.get_all_tickers()
 
@@ -127,19 +119,23 @@ class Broker:
                     total += total_asset_balance * float(symbol['price'])
         return total
 
-
-    def getPortfoliioByID(self,id):
+    def getPortfoliioByID(self, id):
         if self.portfolios == []:
             return None
-        for portFolio in self.portfolios :
+        for portFolio in self.portfolios:
             if portFolio.id == id:
                 return portFolio
         return None
-          
 
+    # def getMaxPortfolioID(self):
+    #     if self.portfolios == []:
+    #         return 1  # first portfolio id
 
-
-
+    #     max_id = 1
+    #     for portfolio in self.portfolios:
+    #         if portfolio.id > max_id:
+    #             max_id = portfolio.id
+    #     return max_id + 1
 
 # broker = Broker()
 

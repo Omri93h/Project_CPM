@@ -1,82 +1,64 @@
 from tkinter import *
 from .authPage import *
-from time import sleep
 
 
-class View(Tk):
-    def __init__(self, controller):
-        # Tk.__init__(self)
-        self.window = Tk()
+class Page(Frame):
+    def __init__(self, *args, **kwargs):
+        Frame.__init__(self, args[0], **kwargs)
 
-        w, h = self.window.winfo_screenwidth(), self.window.winfo_screenheight()
-        self.window.geometry("%dx%d+0+0" % (w*0.8, h*0.9))
-        self.window.minsize(600, 300)
-        self.window.option_add('*font', ('Ubuntu', 13))
-        self.window.title('CPM - by David & Omri')
-        self.window._frame = None
-        self.switchFrame(StartPage, controller)
-
-    def switchFrame(self, frame_class, params=None):
-        """Destroys current frame and replaces it with a new one."""
-        new_frame = frame_class(self, params)
-        if self.window._frame is not None:
-            self.window._frame.destroy()
-        self.window._frame = new_frame
-        self.window._frame.pack()
-
-    def checkAuth(self, controller):
-        if controller.model.auth.isAllowed():
-            self.switchFrame(DashboardPage, controller)
+    def show(self):
+        self.lift()
 
 
-class DashboardPage(Frame):
-    def __init__(self, master, controller, params=None):
-        Frame.__init__(self, master.window)
+class Page2(Page):
+    def __init__(self, *args, **kwargs):
+        Page.__init__(self, *args, **kwargs)
+        label = Label(self, text="This is page 2")
+        label.pack(side="top", fill="both", expand=True)
 
-        label_total_header = Label(self, text="Total Clients Balance:")
 
-        label_total_header.pack(pady=(0, 10), fill=X)
-        label_total = Label(self, text=controller.model.broker.total_balance)
-        label_total.pack(pady=(0, 10), fill=X)
+class PagePortfolio(Page):
+    def __init__(self, *args, **kwargs):
+        Page.__init__(self, *args, **kwargs)
+        label = Label(self, text="This is page 3")
+        label.pack(side="top", fill="both", expand=True)
 
+
+class PageDashboard(Page):
+    def __init__(self, *args, **kwargs):
+        Page.__init__(self, *args, **kwargs)
         label_clients = Label(self, text="My Clients:")
         label_clients.pack(pady=(0, 10), fill=X)
 
         frame_portfolios = Frame(self, borderwidth=5, highlightthickness=2)
         frame_portfolios.config(highlightbackground="grey")
         frame_portfolios.pack(side="top")
-
         row_num = 0
         column_num = 0
         portfolios = []
-        for portfolio in controller.model.broker.portfolios:
+        for portfolio in args[1].model.broker.portfolios:
             portfolio_view = Button(
                 frame_portfolios, text=portfolio.client.first_name,
                 font="Ubuntu 16 bold",
                 bg="blue",
                 fg="white",
-                command=lambda portfolio=portfolio:
-                    master.switchFrame(PortfolioPage, [controller, portfolio]))
-            portfolios.append(portfolio_view)
-
-        for p in portfolios:
-            p.grid(row=row_num, column=column_num)
+                command=lambda: portfolioPage)
+            portfolio_view.grid(row=row_num, column=column_num)
             if(column_num == 2):
                 row_num += 1
                 column_num = 0
             else:
                 column_num += 1
 
+        # buttonframe = Frame(self)
+        # buttonframe.pack(side="top", fill="x", expand=False)
+        # b3 = Button(buttonframe, text="Page 3", command=args[2].lift)
+        # b3.pack(side="left")
 
-class StartPage(Frame):
-    def __init__(self, master, controller, params=None):
-        Frame.__init__(self, master.window)
-        # Label(self, text="This is the start page").pack(
-        #     side="top", fill="x", pady=10)
-        # Button(self, text="Open page one",
-        #        command=lambda: master.switchFrame(PageOne)).pack()
-        # Button(self, text="Open page two",
-        #        command=lambda: master.switchFrame(PageTwo)).pack()
+
+class PageAuth(Page):
+    def __init__(self, *args, **kwargs):
+        Page.__init__(self, *args, **kwargs)
 
         # auth_page Page Background
         # background_image = PhotoImage(file="bg.png")
@@ -99,25 +81,24 @@ class StartPage(Frame):
         entry_username.pack(pady=(100, 10))
         entry_username.bind(
             '<Return>', (lambda event: clickLogin(
-                label_connectionMsg, entry_username, entry_password, controller)))
+                label_connectionMsg, entry_username, entry_password, args[1], args[2])))
 
         entry_password = EntryWithPlaceholder(
             self, "Password ...", hide_char=True)
         entry_password.pack(pady=10)
         entry_password.bind(
             '<Return>', (lambda event: clickLogin(
-                label_connectionMsg, entry_username, entry_password, controller)))
+                label_connectionMsg, entry_username, entry_password, args[1], args[2])))
 
         button_login = Button(self, text="Log In !",
                               font="Ubuntu 16 bold",
                               bg="blue",
                               fg="white",
-                              command=lambda: [clickLogin(
+                              command=lambda: clickLogin(
                                   label_connectionMsg,
                                   entry_username,
                                   entry_password,
-                                  controller),
-                                  master.checkAuth(controller)])
+                                  args[1], args[2]))
         button_login.pack()
 
         # Create New User
@@ -125,8 +106,7 @@ class StartPage(Frame):
                                       command=lambda: clickRegister(label_registerMsg))
         button_createNewUser.pack(pady=(20, 30), side=BOTTOM)
 
-        frame_register = Frame(
-            self, borderwidth=5, highlightthickness=2)
+        frame_register = Frame(self, borderwidth=5, highlightthickness=2)
         frame_register.config(highlightbackground="grey")
         frame_register.pack(side="bottom")
         label_registerMsg = Label(frame_register, text="")
@@ -166,38 +146,30 @@ class StartPage(Frame):
             '<Return>', (lambda event: clickRegister(label_registerMsg)))
 
 
-class NewOrderPage(Frame):
-    def __init__(self, master, params=None):
-        Frame.__init__(self, master.window)
-        Label(self, text="Choose Symbol:").pack(
-            side="top", fill="x", pady=10)
-        
-        SYMBOLS = [
-            "ETH/BTC",
-            "BNB/BTC",
-            "LTC/BTC",
-        ]
-        variable = StringVar(self)
-        variable.set(SYMBOLS[0]) # default value
-        OptionMenu(self, variable, SYMBOLS).pack(pady=(100, 10))
-        Button(self, text="Return to Dashboard",
-               command=lambda: master.switchFrame(DashboardPage, params[0])).pack(side="bottom")
-        
+class MainView(Frame):
+    def __init__(self, controller):
+        Frame.__init__(self)
+        container = Frame(self)
 
-class PortfolioPage(Frame):
-    def __init__(self, master, params=None):
-        Frame.__init__(self, master.window)
-        name = params[1].client.first_name + " " + params[1].client.last_name
-        Label(self, text=name + " Portfolio:").pack(
-            side="top", fill="x", pady=10)
+        portfolio_page = PagePortfolio(self)
+        dashboard_page = PageDashboard(self, controller, portfolio_page)
+        auth_page = PageAuth(self, controller, dashboard_page)
 
-        Button(self, text="New Order",
-               command=lambda:  master.switchFrame(NewOrderPage, params)).pack(pady=(100, 10))
+        auth_page.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
+        dashboard_page.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
+        portfolio_page.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
 
-        Button(self, text="Return to Dashboard",
-               command=lambda: master.switchFrame(DashboardPage, params[0])).pack(side="bottom")
+        container.pack(side="top", fill="both", expand=True)
+        auth_page.show()
 
 
-# if __name__ == "__main__":
-#     app = View(controller="")
-#     app.window.mainloop()
+class View(Frame):
+    def __init__(self, controller):  # window as "master"
+        w, h = controller.root.winfo_screenwidth(), controller.root.winfo_screenheight()
+        controller.root.geometry("%dx%d+0+0" % (w*0.8, h*0.9))
+        controller.root.minsize(600, 300)
+        controller.root.option_add('*font', ('Ubuntu', 13))
+        controller.root.title('CPM - by David & Omri')
+
+        main = MainView(controller)
+        main.pack(side="top", fill="both", expand=True)

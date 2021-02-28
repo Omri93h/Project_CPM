@@ -2,7 +2,9 @@
     "name": "David",
     "API_KEY": "Fh8JhgtmVM6RyazesS0sl9IkMWPD7KLXqF8Gz0E5CJRlgDt4rgry2EJDYajeebZM",
     "API_SECRET": "RSvGFTiUXGwTS1b1JrCm3p92wNF9lJi3e80xcrpJDmAHiIATGglPtp8PLYqmsaWJ",
-    "Total_Balance": 100,
+    "total_balance": 100,
+    "username": "Omri",
+    "password": "1",
     "next_portfolio_id": 5,
     "portfolios": [
         {
