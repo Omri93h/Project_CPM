@@ -36,25 +36,31 @@ class Portfolio(object):
 
     def getOpenOrders(self):
         open_orders = []
-        for order in orders:
-            if order['status'] == 'OPEN':
-                open_orders.append(order)
+        if self.orders != []:
+            for order in self.orders:
+                if order['status'] == 'OPEN':
+                    open_orders.append(order)
         return open_orders
 
     def getOrdersHistory(self):
         orders_history = []
-        for order in orders:
-            if order['status'] == 'ClOSED':
-                orders_history.append(order)
+        if self.orders != []:
+            for order in self.orders:
+                if order['status'] == 'ClOSED':
+                    orders_history.append(order)
         return orders_history
 
-    def buyOrder(self, binance_user, base_asset, quote_asset, amount):
+    def buyOrder(self, binance_user, symbol,quantity ):
         order = binance_user.order_market_buy()
+        return order
 
-
-    def addToOrders(self, order_id, status, base_asset, quote_asset, amount):
+    def addToOrders(self, order_id, status,symbol, quantity):
         order = {"order_id": order_id, "status": status,
-                 "base_asset": base_asset, "quote_asset": quote_asset, "amount": amount}
+                 "symbol": symbol, "amount": amount}
         self.orders.append(order)
 
-
+    
+    def __str__(self):
+        str ="Start_balance  - {} \nCurrent_balance - {}\n"\
+               "Client : \n{} \nOrders - {}\nAssets - {} \n".format(self.start_balance, self.current_balance,self.client,self.orders ,self.assets)
+        return  str

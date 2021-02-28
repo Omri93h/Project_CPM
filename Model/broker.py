@@ -22,6 +22,7 @@ class Broker:
                 self.API_KEY = broker_data["API_KEY"]
                 self.API_SECRET = broker_data["API_SECRET"]
                 self.Total_Balance =broker_data["Total_Balance"]
+                self.Free_Balance = broker_data["Free_Balance"]
                 self.next_portfolio_id = broker_data["next_portfolio_id"]
                 self.portfolios = []
                 self.parsePortfolios(broker_data["portfolios"])
@@ -38,7 +39,7 @@ class Broker:
         self.API_KEY = input("API_KEY: ")
         self.API_SECRET = input("API_SECRET: ")
         self.Total_Balance = int(input("Total_Balance: "))    ### ###   to change -check the aktual balance 
-                                                            ### get Total Usd value ??
+        self.Free_Balance  = self.Total_Balance                                                  ### get Total Usd value ??
         self.next_portfolio_id = 0
         self.portfolios = []
 
@@ -58,6 +59,7 @@ class Broker:
             'API_KEY': self.API_KEY,
             'API_SECRET': self.API_SECRET,
             'Total_Balance':self.Total_Balance,
+            "Free_Balance": self.Free_Balance,
             'next_portfolio_id' : self.next_portfolio_id
         }
         portfolios = []
@@ -102,6 +104,78 @@ class Broker:
         new_portfolio = Portfolio().New(newPortData)
         self.portfolios.append(new_portfolio)
         self.saveData()
+
+
+    def saveNewOrder(self,portfolio_id,order):
+        orderToSave = {"orderId":order["orderId"],"symbol":order["symbol"],"quantity":order["origQty"],"status":order["status"]}
+        for porfolio in self.portfolios :
+            if porfolio.id == portfolio_id:
+                porfolio.orders.append(orderToSave)
+                self.saveData()
+                return
+        raise Exception("There is no such portfolio id ")
+        
+
+    def saveNewAset(self,portfolio_id,asset,action):
+        for porfolio in self.portfolios :
+            if porfolio.id == portfolio_id:
+                if asset["symbol"] in porfolio.assets :
+                    if action == "Buy":
+                        porfolio.assets[asset["symbol"]] += float(asset["amount"])   
+                    else:
+                        porfolio.assets[asset["symbol"]] -= float(asset["amount"])
+                else:
+                    porfolio.assets[asset["symbol"]] = float(asset["amount"])
+                self.saveData()
+                return
+        raise Exception("There is no such portfolio id ")
+        
+
+    def upDateAllAssets(self):
+        
+        pass 
+
+    def editClient(self,portfolio_id,client):
+        for porfolio in self.portfolios :
+            if porfolio.id == portfolio_id:
+                portfolio.client.first_name = client["first_name"]
+                portfolio.client.last_name = client["last_name"]
+                portfolio.client.phone = client["phone"]
+                portfolio.client.email = client["email"]
+                self.saveData()
+                return
+        raise Exception("There is no such portfolio id ")
+        
+
+
+
+    def createOrder(self,portfolio_id,orderDetails):
+        try:
+            if orderDetails["type"] == "M":
+                if orderDetails["action"] == "Buy":
+                    order = self.binance_client.order_market_buy(symbol = orderDetails["symbol"] , quantity = orderDetails["quantity"])
+                else:      
+                    order = self.binance_client.order_market_sell(symbol = orderDetails["symbol"] , quantity = orderDetails["quantity"])
+            else:
+                if orderDetails["action"] == "Buy":
+                    order = self.binance_client.order_limit_buy(ymbol = orderDetails["symbol"] , quantity = orderDetails["quantity"],price = orderDetails["price"] )
+                else:
+                    order = self.binance_client.order_limit_sell(ymbol = orderDetails["symbol"] , quantity = orderDetails["quantity"],price = orderDetails["price"] )
+            self.saveNewOrder(portfolio_id,order)
+            if order["status"] == "FILLED" or order["status"] == "PARTIALLY_FILLED":
+                asset = {"symbol":order["symbol"] , "amount": order["executedQty"]}
+                self.saveNewAset(portfolio_id,asset,orderDetails["action"])
+            print(order)
+        except Exception as e:
+                print(e)
+        return
+
+
+    # def editClientPhone(self,portfolio_id,client_phone):
+    #     pass
+
+    # def editClientEmail(self,portfolio_id,client_eemail):
+    #     pass
 
     # def getMaxPortfolioID(self):
     #     if self.portfolios == []:
