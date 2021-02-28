@@ -1,5 +1,5 @@
 
-class View :
+class View:
     def __init__(self):
         pass
 
@@ -12,15 +12,15 @@ class View :
         print("5 - change broker")
         print("6 - exit ")
         choice = int(input(">>"))
-        if choice<1 or choice>6 :
+        if choice < 1 or choice > 6:
             raise Exception("Incorect choice . Try again .")
         return choice
-  
-    def portfolioForm(self,max_start_balance):
+
+    def portfolioForm(self, max_start_balance):
         portfolioData = {}
         print("To add new portfolio  - fill up the new portfolio data please")
-        portfolioData["start_balance"] = int(input("start_balance : "))
-        if portfolioData["start_balance"] > max_start_balance or portfolioData["start_balance"] <0:
+        portfolioData["start_balance"] = float(input("start_balance : "))
+        if portfolioData["start_balance"] > max_start_balance or portfolioData["start_balance"] < 0:
             raise Exception("Invalid start_balance")
         portfolioData["first_name"] = input("first_name : ")
         portfolioData["last_name"] = input("last_name : ")

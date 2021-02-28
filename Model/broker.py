@@ -19,6 +19,8 @@ class Broker:
         if broker_data != {}:
             try:
                 self.name = broker_data['name']
+                self.username = broker_data['username']
+                self.password = broker_data['password']
                 self.API_KEY = broker_data["API_KEY"]
                 self.API_SECRET = broker_data["API_SECRET"]
                 self.Total_Balance =broker_data["Total_Balance"]
@@ -52,7 +54,6 @@ class Broker:
         else:
             return {}
 
-
     def saveData(self):
         broker_data = {
             'name': self.name,
@@ -80,7 +81,7 @@ class Broker:
         with open("broker_data.json", 'w') as json_file:
             json.dump(broker_data, json_file)
 
-    # creating protfoio objects from list of json  
+    # creating protfoio objects from list of json
     def parsePortfolios(self, portfolios):
         for portfolio in portfolios:
             parsed_portfolio = Portfolio().Exist(portfolio)
@@ -201,19 +202,23 @@ class Broker:
                     total += total_asset_balance * float(symbol['price'])
         return total
 
-
-    def getPortfoliioByID(self,id):
+    def getPortfoliioByID(self, id):
         if self.portfolios == []:
             return None
-        for portFolio in self.portfolios :
+        for portFolio in self.portfolios:
             if portFolio.id == id:
                 return portFolio
         return None
-          
 
+    # def getMaxPortfolioID(self):
+    #     if self.portfolios == []:
+    #         return 1  # first portfolio id
 
-
-
+    #     max_id = 1
+    #     for portfolio in self.portfolios:
+    #         if portfolio.id > max_id:
+    #             max_id = portfolio.id
+    #     return max_id + 1
 
 # broker = Broker()
 

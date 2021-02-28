@@ -17,7 +17,8 @@ class Portfolio(object):
     def New(self, newPortData):
         self.start_balance = newPortData["start_balance"]
         self.current_balance = newPortData["start_balance"]
-        self.client = Client(newPortData["first_name"], newPortData["last_name"], newPortData["email"], newPortData["phone"])
+        self.client = Client(
+            newPortData["first_name"], newPortData["last_name"], newPortData["email"], newPortData["phone"])
         self.orders = []
         self.assets = {}
         self.id = newPortData["id"]
