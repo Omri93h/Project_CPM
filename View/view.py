@@ -33,13 +33,18 @@ class View(Tk):
 class DashboardPage(Frame):
     def __init__(self, master, controller, params=None):
         Frame.__init__(self, master.window)
-
-        label_total_header = Label(self, text="Total Clients Balance:")
-
-        label_total_header.pack(pady=(0, 10), fill=X)
-        label_total = Label(
+        label_header = Label(self,
+                             text="Welcome, " + controller.model.broker.name + "!",
+                             fg="black",
+                             font='Ubuntu 20 bold'
+                             )
+        label_header.pack(pady=(0, 20), fill=X)
+        
+        label_total_str = Label(self, text="Total Clients Balance:")
+        label_total_str.pack(pady=(0, 30), fill=X)
+        label_total_num = Label(
             self, text=str(controller.model.broker.total_balance) + "$")
-        label_total.pack(pady=(0, 10), fill=X)
+        label_total_num.pack(pady=(0, 10), fill=X)
 
         label_clients = Label(self, text="My Clients:")
         label_clients.pack(pady=(0, 10), fill=X)
@@ -87,8 +92,12 @@ class AddPortfolioPage(Frame):
 
         self.max_start_balance = 10000
 
-        label_page_header = Label(self, text="Add Portfolio:")
-        label_page_header.pack(pady=(10, 50), fill=X)
+        label_header = Label(self,
+                        text="Welcome, " + controller.model.broker.name + "!",
+                        fg="black",
+                        font='Ubuntu 20 bold'
+                        )
+        label_header.pack(pady=(0, 20), fill=X)
 
         entry_start_balance = EntryWithPlaceholder(
             self, "Start Balance in $ ...")
@@ -127,7 +136,6 @@ class AddPortfolioPage(Frame):
         if(self.Validate()):
             controller.addPortfolio(self.portfolioData)
             master.switchFrame(DashboardPage, controller)
-            
 
     def Validate(self):
         # check if data ok

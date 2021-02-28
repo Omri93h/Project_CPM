@@ -1,1 +1,84 @@
-{"name": "David", "API_KEY": "Fh8JhgtmVM6RyazesS0sl9IkMWPD7KLXqF8Gz0E5CJRlgDt4rgry2EJDYajeebZM", "API_SECRET": "RSvGFTiUXGwTS1b1JrCm3p92wNF9lJi3e80xcrpJDmAHiIATGglPtp8PLYqmsaWJ", "total_balance": 1000, "free_balance": 1000, "next_portfolio_id": 7, "username": "Omri", "password": "1", "portfolios": [{"id": 1, "start_balance": "32", "assets": {}, "orders": [], "client": {"first_name": "DAVID", "last_name": "TSIBULSKY", "phone": "23124324", "email": "ASDSD@ADA.SD"}}, {"id": 2, "start_balance": "32", "assets": {}, "orders": [], "client": {"first_name": "dsd", "last_name": "fw", "phone": "5342267757", "email": "fdwef@dcwd.22"}}, {"id": 3, "start_balance": "340", "assets": {}, "orders": [], "client": {"first_name": "Omri", "last_name": "Haham", "phone": "657868768", "email": "jkhkj"}}, {"id": 4, "start_balance": 99.0, "assets": {}, "orders": [], "client": {"first_name": "Shimi", "last_name": "Shimoni", "phone": "0526999779", "email": "s@gmail.com"}}, {"id": 5, "start_balance": "2000", "assets": {}, "orders": [], "client": {"first_name": "Chiko", "last_name": "VeDico", "phone": "052052052", "email": "mail@gmail.com"}}, {"id": 6, "start_balance": "4000", "assets": {}, "orders": [], "client": {"first_name": "ABC", "last_name": "EFG", "phone": "65465", "email": "afs@sdg.com"}}]}
+{
+    "name": "David",
+    "API_KEY": "Fh8JhgtmVM6RyazesS0sl9IkMWPD7KLXqF8Gz0E5CJRlgDt4rgry2EJDYajeebZM",
+    "API_SECRET": "RSvGFTiUXGwTS1b1JrCm3p92wNF9lJi3e80xcrpJDmAHiIATGglPtp8PLYqmsaWJ",
+    "total_balance": 1000,
+    "free_balance": 1000,
+    "next_portfolio_id": 7,
+    "username": "Omri",
+    "password": "1",
+    "portfolios": [
+        {
+            "id": 1,
+            "start_balance": "32",
+            "assets": {},
+            "orders": [],
+            "client": {
+                "first_name": "DAVID",
+                "last_name": "TSIBULSKY",
+                "phone": "23124324",
+                "email": "ASDSD@ADA.SD"
+            }
+        },
+        {
+            "id": 2,
+            "start_balance": "32",
+            "assets": {},
+            "orders": [],
+            "client": {
+                "first_name": "dsd",
+                "last_name": "fw",
+                "phone": "5342267757",
+                "email": "fdwef@dcwd.22"
+            }
+        },
+        {
+            "id": 3,
+            "start_balance": "340",
+            "assets": {},
+            "orders": [],
+            "client": {
+                "first_name": "Omri",
+                "last_name": "Haham",
+                "phone": "657868768",
+                "email": "jkhkj"
+            }
+        },
+        {
+            "id": 4,
+            "start_balance": 99.0,
+            "assets": {},
+            "orders": [],
+            "client": {
+                "first_name": "Shimi",
+                "last_name": "Shimoni",
+                "phone": "0526999779",
+                "email": "s@gmail.com"
+            }
+        },
+        {
+            "id": 5,
+            "start_balance": "2000",
+            "assets": {},
+            "orders": [],
+            "client": {
+                "first_name": "Chiko",
+                "last_name": "VeDico",
+                "phone": "052052052",
+                "email": "mail@gmail.com"
+            }
+        },
+        {
+            "id": 6,
+            "start_balance": "4000",
+            "assets": {},
+            "orders": [],
+            "client": {
+                "first_name": "ABC",
+                "last_name": "EFG",
+                "phone": "65465",
+                "email": "afs@sdg.com"
+            }
+        }
+    ]
+}
