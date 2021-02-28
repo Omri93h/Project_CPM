@@ -1,14 +1,10 @@
-<<<<<<< HEAD
-{"name": "David", "API_KEY": "Fh8JhgtmVM6RyazesS0sl9IkMWPD7KLXqF8Gz0E5CJRlgDt4rgry2EJDYajeebZM", "API_SECRET": "RSvGFTiUXGwTS1b1JrCm3p92wNF9lJi3e80xcrpJDmAHiIATGglPtp8PLYqmsaWJ", "Total_Balance": 200, "Free_Balance": 70, "next_portfolio_id": 5, "portfolios": [{"id": 1, "start_balance": 15, "assets": {"DOGEBTC": 23.0}, "orders": [{"orderId": 61212299, "symbol": "DOGEBTC", "quantity": "123.00000000", "status": "FILLED"}, {"orderId": 61221190, "symbol": "DOGEBTC", "quantity": "100.00000000", "status": "FILLED"}], "client": {"first_name": "DAVID", "last_name": "TSIBULSKY", "phone": "23124324", "email": "ASDSD@ADA.SD"}}, {"id": 2, "start_balance": 25, "assets": {}, "orders": [], "client": {"first_name": "dsd", "last_name": "fw", "phone": "5342267757", "email": "fdwef@dcwd.22"}}, {"id": 3, "start_balance": 30, "assets": {}, "orders": [], "client": {"first_name": "Omri", "last_name": "Haham", "phone": "657868768", "email": "jkhkj"}}]}
-=======
 {
     "name": "David",
     "API_KEY": "Fh8JhgtmVM6RyazesS0sl9IkMWPD7KLXqF8Gz0E5CJRlgDt4rgry2EJDYajeebZM",
     "API_SECRET": "RSvGFTiUXGwTS1b1JrCm3p92wNF9lJi3e80xcrpJDmAHiIATGglPtp8PLYqmsaWJ",
-    "total_balance": 100,
-    "username": "Omri",
-    "password": "1",
-    "next_portfolio_id": 5,
+    "total_balance": 1000,
+    "free_balance": 1000,
+    "next_portfolio_id": 0,
     "portfolios": [
         {
             "id": 1,
@@ -45,19 +41,8 @@
                 "phone": "657868768",
                 "email": "jkhkj"
             }
-        },
-        {
-            "id": 4,
-            "start_balance": 99.0,
-            "assets": {},
-            "orders": [],
-            "client": {
-                "first_name": "Shimi",
-                "last_name": "Shimoni",
-                "phone": "0526999779",
-                "email": "s@gmail.com"
-            }
         }
-    ]
+    ],
+    "username": "Omri",
+    "password": "1"
 }
->>>>>>> 8d8c299802676ab34cc663f49a26de7832c6b6a3

@@ -23,8 +23,8 @@ class Broker:
                 self.password = broker_data['password']
                 self.API_KEY = broker_data["API_KEY"]
                 self.API_SECRET = broker_data["API_SECRET"]
-                self.Total_Balance =broker_data["Total_Balance"]
-                self.Free_Balance = broker_data["Free_Balance"]
+                self.total_balance =broker_data["total_balance"]
+                self.free_balance = broker_data["free_balance"]
                 self.next_portfolio_id = broker_data["next_portfolio_id"]
                 self.portfolios = []
                 self.parsePortfolios(broker_data["portfolios"])
@@ -40,12 +40,12 @@ class Broker:
         self.name = input("Name: ")  # WILL CHANGED IN VIEW
         self.API_KEY = input("API_KEY: ")
         self.API_SECRET = input("API_SECRET: ")
-        self.Total_Balance = int(input("Total_Balance: "))    ### ###   to change -check the aktual balance 
-        self.Free_Balance  = self.Total_Balance                                                  ### get Total Usd value ??
+        self.total_balance = int(input("total_balance: "))    ### ###   to change -check the aktual balance 
+        self.free_balance  = self.total_balance                                                  ### get Total Usd value ??
         self.next_portfolio_id = 0
         self.portfolios = []
 
-        saveData()
+        self.saveData()
 
     def loadData(self):
         if path.exists("broker_data.json"):
@@ -59,14 +59,15 @@ class Broker:
             'name': self.name,
             'API_KEY': self.API_KEY,
             'API_SECRET': self.API_SECRET,
-            'Total_Balance':self.Total_Balance,
-            "Free_Balance": self.Free_Balance,
+            'total_balance':self.total_balance,
+            "free_balance": self.free_balance,
             'next_portfolio_id' : self.next_portfolio_id
         }
         portfolios = []
         for portfolio in self.portfolios:
             # orders =
             # for i in range(len(self.portfolios.orders)):
+            print("lala")
             portfolio = {'id': portfolio.id, 'start_balance': portfolio.start_balance,
                          'assets': portfolio.assets, 'orders': portfolio.orders,
                          'client': {'first_name': portfolio.client.first_name,
@@ -76,10 +77,11 @@ class Broker:
                                     }
                          }
             portfolios.append(portfolio)
-
+            print("lala2")
         broker_data['portfolios'] = portfolios
         with open("broker_data.json", 'w') as json_file:
             json.dump(broker_data, json_file)
+        print("lala3")
 
     # creating protfoio objects from list of json
     def parsePortfolios(self, portfolios):
