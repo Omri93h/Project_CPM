@@ -69,7 +69,6 @@ class Broker:
         for portfolio in self.portfolios:
             # orders =
             # for i in range(len(self.portfolios.orders)):
-            print("lala")
             portfolio = {'id': portfolio.id, 'start_balance': portfolio.start_balance,
                          'assets': portfolio.assets, 'orders': portfolio.orders,
                          'client': {'first_name': portfolio.client.first_name,
@@ -79,11 +78,10 @@ class Broker:
                                     }
                          }
             portfolios.append(portfolio)
-            print("lala2")
         broker_data['portfolios'] = portfolios
         with open("broker_data.json", 'w') as json_file:
             json.dump(broker_data, json_file)
-        print("lala3")
+
 
     # creating protfoio objects from list of json
     def parsePortfolios(self, portfolios):

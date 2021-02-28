@@ -4,7 +4,9 @@
     "API_SECRET": "RSvGFTiUXGwTS1b1JrCm3p92wNF9lJi3e80xcrpJDmAHiIATGglPtp8PLYqmsaWJ",
     "total_balance": 1000,
     "free_balance": 1000,
-    "next_portfolio_id": 0,
+    "next_portfolio_id": 1,
+    "username": "Omri",
+    "password": "1",
     "portfolios": [
         {
             "id": 1,
@@ -41,8 +43,18 @@
                 "phone": "657868768",
                 "email": "jkhkj"
             }
+        },
+        {
+            "id": 0,
+            "start_balance": "123",
+            "assets": {},
+            "orders": [],
+            "client": {
+                "first_name": "da",
+                "last_name": "ts",
+                "phone": "3457597",
+                "email": "fdf@fdgf.j"
+            }
         }
-    ],
-    "username": "Omri",
-    "password": "1"
+    ]
 }
