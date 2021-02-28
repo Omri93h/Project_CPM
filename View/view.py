@@ -1,4 +1,5 @@
 from tkinter import *
+import tkinter.ttk as ttk
 from .authPage import *
 from time import sleep
 
@@ -169,20 +170,50 @@ class StartPage(Frame):
 class NewOrderPage(Frame):
     def __init__(self, master, params=None):
         Frame.__init__(self, master.window)
+
+        self.price = StringVar(self)
+        self.price.set("")
+
         Label(self, text="Choose Symbol:").pack(
             side="top", fill="x", pady=10)
-        
+
+        style = ttk.Style()
+        style.configure('my.TMenubutton', font=('Futura', 20))
+
         SYMBOLS = [
             "ETH/BTC",
             "BNB/BTC",
-            "LTC/BTC",
+            "LTC/BTC"
         ]
+
         variable = StringVar(self)
-        variable.set(SYMBOLS[0]) # default value
-        OptionMenu(self, variable, SYMBOLS).pack(pady=(100, 10))
-        Button(self, text="Return to Dashboard",
-               command=lambda: master.switchFrame(DashboardPage, params[0])).pack(side="bottom")
+        dropdown = ttk.OptionMenu(
+            self, variable, SYMBOLS[0], *SYMBOLS, command=self.Callback, style='my.TMenubutton')
+        dropdown['menu'].configure(bg="white", font=('futura', 20))
+        dropdown.pack(pady=(100, 10))
+
+        Label(self, text="Price:").pack(
+            side="top", fill="x", pady=10)
+
+        Label(self, textvariable=self.price).pack(
+            side="top", fill="x", pady=10)
+
+        entry_amount = EntryWithPlaceholder(self, "Amount ...")
+        entry_amount.pack(pady=(50, 10))
         
+        Button(self, text="BUY", bg="green",
+               command=lambda:  master.switchFrame(NewOrderPage, params)).pack(pady=(10, 10))
+        
+        Button(self, text="SELL", bg="red",
+               command=lambda:  master.switchFrame(NewOrderPage, params)).pack(pady=(10, 10))
+
+        Button(self, text="Return to Dashboard",
+               command=lambda: master.switchFrame(DashboardPage, params[0])).pack(pady=(100, 10))
+
+    def Callback(self, selected):
+        print(selected)
+        self.price.set("New Price")
+
 
 class PortfolioPage(Frame):
     def __init__(self, master, params=None):
