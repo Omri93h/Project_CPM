@@ -23,3 +23,9 @@ class Client:
 
     def setEmail(self, email):
         self.email = email
+        
+    def __str__(self):
+        str ="First name  - {} \nLast name - {}\n"\
+               "Email - {} \nPhone - {} \n".format(self.first_name, self.last_name,self.email,self.phone)
+        return  str
+    
