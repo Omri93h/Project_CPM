@@ -59,9 +59,11 @@ class Broker:
             'name': self.name,
             'API_KEY': self.API_KEY,
             'API_SECRET': self.API_SECRET,
-            'total_balance':self.total_balance,
-            "free_balance": self.free_balance,
-            'next_portfolio_id' : self.next_portfolio_id
+            'total_balance': self.total_balance,
+            'free_balance': self.free_balance,
+            'next_portfolio_id': self.next_portfolio_id,
+            'username': self.username,
+            'password': self.password,
         }
         portfolios = []
         for portfolio in self.portfolios:

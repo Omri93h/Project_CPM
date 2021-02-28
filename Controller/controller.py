@@ -4,22 +4,19 @@ from tkinter import *
 
 class Controller():
     def __init__(self):
-        # self.root = Tk()
         self.model = Model()
         self.view = View(self)
-        # self.dashChoice = {1: self.viewPortfolio,
-        #                    2: self.addPortfolio, 6: "exit"}
 
     def viewPortfolio(self):
         portfolio_id = self.view.choosePortfolioById()
         portFolio = self.model.broker.getPortfoliioByID(portfolio_id)
         self.view.viewPortfolio(portFolio)
 
-    def addPortfolio(self):
+    def addPortfolio(self, portfolio):
         try:
-            newPortData = self.view.portfolioForm(
-                self.model.broker.Total_Balance)
-            self.model.broker.addPortfolio(newPortData)
+            # newPortData = self.view.portfolioForm(
+            #     self.model.broker.Total_Balance)
+            self.model.broker.addPortfolio(portfolio)
         except Exception as e:
             print(e)
 
@@ -35,6 +32,7 @@ class Controller():
     def run(self):
         self.view.window.deiconify()
         self.view.window.mainloop()
+
         # authorize
         # while (1):
         #     DashChoice = self.Dashboard()
