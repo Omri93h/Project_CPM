@@ -37,7 +37,8 @@ class DashboardPage(Frame):
         label_total_header = Label(self, text="Total Clients Balance:")
 
         label_total_header.pack(pady=(0, 10), fill=X)
-        label_total = Label(self, text=controller.model.broker.total_balance)
+        label_total = Label(
+            self, text=str(controller.model.broker.total_balance) + "$")
         label_total.pack(pady=(0, 10), fill=X)
 
         label_clients = Label(self, text="My Clients:")
@@ -68,21 +69,78 @@ class DashboardPage(Frame):
             else:
                 column_num += 1
 
+        Button(self, text="Add", bg="green",
+               command=lambda:
+                   master.switchFrame(AddPortfolioPage, controller)).pack(pady=(10, 10))
+
+
+class AddPortfolioPage(Frame):
+    def __init__(self, master, controller, params=None):
+        Frame.__init__(self, master.window)
+        self.portfolioData = {
+            "start_balance": None,
+            "first_name": None,
+            "last_name": None,
+            "email": None,
+            "phone": None,
+        }
+
+        self.max_start_balance = 10000
+
+        label_page_header = Label(self, text="Add Portfolio:")
+        label_page_header.pack(pady=(10, 50), fill=X)
+
+        entry_start_balance = EntryWithPlaceholder(
+            self, "Start Balance in $ ...")
+        entry_start_balance.pack(pady=(10, 10))
+
+        entry_first_name = EntryWithPlaceholder(
+            self, "Client's first name ...")
+        entry_first_name.pack(pady=(10, 10))
+
+        entry_last_name = EntryWithPlaceholder(self, "Client's last name ...")
+        entry_last_name.pack(pady=(10, 10))
+
+        entry_phone = EntryWithPlaceholder(self, "Client's Phone name ...")
+        entry_phone.pack(pady=(10, 10))
+
+        entry_email = EntryWithPlaceholder(self, "Client's Email ...")
+        entry_email.pack(pady=(10, 10))
+
+        entries = [
+            entry_start_balance,
+            entry_first_name,
+            entry_last_name,
+            entry_email,
+            entry_phone
+        ]
+
+        Button(self, text="Add Portfolio!",
+               command=lambda: self.Add(entries, master, controller)).pack(pady=(100, 10))
+
+    def Add(self, entries, master, controller):
+        self.portfolioData["start_balance"] = entries[0].get()
+        self.portfolioData["first_name"] = entries[1].get()
+        self.portfolioData["last_name"] = entries[2].get()
+        self.portfolioData["email"] = entries[3].get()
+        self.portfolioData["phone"] = entries[4].get()
+        if(self.Validate()):
+            controller.addPortfolio(self.portfolioData)
+            master.switchFrame(DashboardPage, controller)
+            
+
+    def Validate(self):
+        # check if data ok
+        if (float(self.portfolioData["start_balance"]) > self.max_start_balance or
+                float(self.portfolioData["start_balance"]) <= 0):
+            raise Exception("Invalid start_balance")
+            return False
+        return True
+
 
 class StartPage(Frame):
     def __init__(self, master, controller, params=None):
         Frame.__init__(self, master.window)
-        # Label(self, text="This is the start page").pack(
-        #     side="top", fill="x", pady=10)
-        # Button(self, text="Open page one",
-        #        command=lambda: master.switchFrame(PageOne)).pack()
-        # Button(self, text="Open page two",
-        #        command=lambda: master.switchFrame(PageTwo)).pack()
-
-        # auth_page Page Background
-        # background_image = PhotoImage(file="bg.png")
-        # background_label = Label(self, image=background_image)
-        # background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         # Welcome Note
         welcome_note = Label(self,
@@ -200,10 +258,10 @@ class NewOrderPage(Frame):
 
         entry_amount = EntryWithPlaceholder(self, "Amount ...")
         entry_amount.pack(pady=(50, 10))
-        
+
         Button(self, text="BUY", bg="green",
                command=lambda:  master.switchFrame(NewOrderPage, params)).pack(pady=(10, 10))
-        
+
         Button(self, text="SELL", bg="red",
                command=lambda:  master.switchFrame(NewOrderPage, params)).pack(pady=(10, 10))
 
@@ -227,8 +285,3 @@ class PortfolioPage(Frame):
 
         Button(self, text="Return to Dashboard",
                command=lambda: master.switchFrame(DashboardPage, params[0])).pack(side="bottom")
-
-
-# if __name__ == "__main__":
-#     app = View(controller="")
-#     app.window.mainloop()

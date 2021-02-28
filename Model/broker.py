@@ -24,6 +24,7 @@ class Broker:
                 self.API_KEY = broker_data["API_KEY"]
                 self.API_SECRET = broker_data["API_SECRET"]
                 self.total_balance = broker_data["total_balance"]
+                self.free_balance = broker_data["free_balance"]
                 self.next_portfolio_id = broker_data["next_portfolio_id"]
                 self.portfolios = []
                 self.parsePortfolios(broker_data["portfolios"])
@@ -60,7 +61,10 @@ class Broker:
             'API_KEY': self.API_KEY,
             'API_SECRET': self.API_SECRET,
             'total_balance': self.total_balance,
-            'next_portfolio_id': self.next_portfolio_id
+            'free_balance': self.free_balance,
+            'next_portfolio_id': self.next_portfolio_id,
+            'username': self.username,
+            'password': self.password,
         }
         portfolios = []
         for portfolio in self.portfolios:
