@@ -18,6 +18,9 @@ class Controller():
         except Exception as e:
             print(e)
 
+    def getTotalBalance(self):
+        return self.model.broker.getTotalUsdValue()
+    
     def Dashboard(self):
         choice = None
         while choice is None:
