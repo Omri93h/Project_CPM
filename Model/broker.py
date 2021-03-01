@@ -150,6 +150,14 @@ class Broker:
                 return
         raise Exception("There is no such portfolio id ")
 
+    def editBroker(self, broker_data):
+        self.API_KEY = broker_data["API_KEY"]
+        self.API_SECRET = broker_data["API_SECRET"]
+        self.name = broker_data["name"]
+        self.username = broker_data["username"]
+        self.password = broker_data["password"]
+        return True
+
     def editClient(self, portfolio_id, client):
         for portfolio in self.portfolios:
             if portfolio.id == portfolio_id:
