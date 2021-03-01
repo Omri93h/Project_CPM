@@ -27,7 +27,7 @@ class Portfolio(object):
     # constructor B
     def Exist(self, portfolio):
         self.start_balance = portfolio['start_balance']
-        self.current_balance = portfolio['start_balance']
+        self.current_balance = portfolio['current_balance']
         self.client = Client(portfolio["client"]['first_name'], portfolio["client"]['last_name'],
                              portfolio["client"]['email'], portfolio["client"]['phone'])
         self.orders = portfolio["orders"]

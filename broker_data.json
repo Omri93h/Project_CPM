@@ -2,7 +2,7 @@
     "name": "David",
     "API_KEY": "MAVi1uReYpALWuxi0LqU17mJRWgud1z1oYIhC5uZHusvCsHf6e4YNGzE0eCI17Cl",
     "API_SECRET": "Ke4InMoSV2ctF0c1Hih2yCwV1YXrdlVsEseeat1o4vdRyU7qztT5k6UW0XqVBzci",
-    "total_balance": "454.87",
+    "total_balance": "457.62",
     "free_balance": 1000,
     "next_portfolio_id": 5,
     "username": "omri",
@@ -11,6 +11,7 @@
         {
             "id": 1,
             "start_balance": "32",
+            "current_balance": 32,
             "assets": {},
             "orders": [],
             "client": {
@@ -23,6 +24,7 @@
         {
             "id": 3,
             "start_balance": "340",
+            "current_balance": 340,
             "assets": {},
             "orders": [],
             "client": {
@@ -35,6 +37,7 @@
         {
             "id": 2,
             "start_balance": "2000",
+            "current_balance": 1700,
             "assets": {
                 "BNBBTC": 0.1,
                 "ETHBTC": 0.02

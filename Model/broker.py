@@ -72,6 +72,7 @@ class Broker:
             # orders =
             # for i in range(len(self.portfolios.orders)):
             portfolio = {'id': portfolio.id, 'start_balance': portfolio.start_balance,
+                         "current_balance": portfolio.current_balance,
                          'assets': portfolio.assets, 'orders': portfolio.orders,
                          'client': {'first_name': portfolio.client.first_name,
                                     'last_name': portfolio.client.last_name,
