@@ -40,14 +40,15 @@ class DashboardPage(Frame):
                              )
         label_header.pack(pady=(0, 20), fill=X)
 
-        label_total_str = Label(self, text="Total Clients Balance:")
-        label_total_str.pack(pady=(0, 30), fill=X)
+        label_total_str = Label(
+            self, text="Total Clients Balance:", font='Ubuntu 14 bold')
+        label_total_str.pack(pady=(20, 10), fill=X)
         label_total_num = Label(
-            self, text=str(controller.getTotalBalance()) + "$")
+            self, text=str(controller.getTotalBalance()) + "$", font='Ubuntu 26')
         label_total_num.pack(pady=(0, 10), fill=X)
 
-        label_clients = Label(self, text="My Clients:")
-        label_clients.pack(pady=(0, 10), fill=X)
+        label_clients = Label(self, text="Clients", font='Ubuntu 14 bold')
+        label_clients.pack(pady=(30, 10), fill=X)
 
         frame_portfolios = Frame(self, borderwidth=5, highlightthickness=2)
         frame_portfolios.config(highlightbackground="grey")
@@ -57,10 +58,14 @@ class DashboardPage(Frame):
         column_num = 0
         portfolios = []
         for portfolio in controller.model.broker.portfolios:
+            client_name = portfolio.client.first_name + " " + portfolio.client.last_name
+            client_value = "{:.2f}".format(
+                controller.model.broker.getPorfolioBalance(portfolio.id))
             portfolio_view = Button(
-                frame_portfolios, text=portfolio.client.first_name,
+                frame_portfolios, text=client_name +
+                "\n\n( " + client_value + "$ )",
                 font="Ubuntu 16 bold",
-                bg="blue",
+                bg="black",
                 fg="white",
                 command=lambda portfolio=portfolio:
                     master.switchFrame(PortfolioPage, [controller, portfolio]))
@@ -74,9 +79,93 @@ class DashboardPage(Frame):
             else:
                 column_num += 1
 
-        Button(self, text="Add Client!", bg="green", fg="white",
+        Button(self, text="Add Client!", bg="green", fg="white", font='Ubuntu 12 bold',
                command=lambda:
-                   master.switchFrame(AddPortfolioPage, controller)).pack(pady=(50, 10))
+                   master.switchFrame(AddPortfolioPage, controller)).pack(pady=(30, 10))
+
+        Button(self, text="Edit Broker Info", bg="white", fg="black", font='Ubuntu 12',
+               command=lambda:
+                   master.switchFrame(EditBrokerPage, controller)).pack(pady=(10, 10))
+
+
+class EditBrokerPage(Frame):
+    def __init__(self, master, controller):
+        Frame.__init__(self, master.window)
+
+        self.responseText = StringVar()
+
+        header_frame = Frame(
+            self, borderwidth=1, highlightthickness=1)
+        header_frame.columnconfigure(0, weight=1)
+        header_frame.columnconfigure(1, weight=1)
+        header_frame.columnconfigure(2, weight=1)
+        header_frame.pack(side="top", fill="both")
+
+        Button(header_frame, text="Back",
+               command=lambda: master.switchFrame(DashboardPage, controller)).grid(
+                   row=0, column=0, ipadx=30
+        )
+
+        label_header = Label(header_frame,
+                             text="CLIENT INFO",
+                             fg="black",
+                             font='Ubuntu 20 bold'
+                             )
+        label_header.grid(row=0, column=1, ipadx=30)
+        Button(header_frame, text="Save", bg="blue", fg="white",
+               command=lambda: self.Save(controller)).grid(
+                   row=0, column=2, ipadx=30
+        )
+
+        broker_data_frame = Frame(
+            self, borderwidth=1, highlightthickness=1)
+        broker_data_frame.pack(fill="both", pady=50)
+
+        Label(broker_data_frame, text="Binance API KEY: ").grid(row=0, column=0)
+        self.entry_API_KEY = Entry(broker_data_frame, width=70)
+        self.entry_API_KEY.grid(row=0, column=1)
+        self.entry_API_KEY.insert(0, controller.model.broker.API_KEY)
+
+        Label(broker_data_frame, text="Binance API SECRET: ").grid(row=1, column=0)
+        self.entry_API_SECRET = Entry(broker_data_frame, width=70)
+        self.entry_API_SECRET.grid(row=1, column=1)
+        self.entry_API_SECRET.insert(0, controller.model.broker.API_SECRET)
+
+        Label(broker_data_frame, text="Username: ").grid(row=2, column=0)
+        self.entry_username = Entry(broker_data_frame, width=70)
+        self.entry_username.grid(row=2, column=1)
+        self.entry_username.insert(0, controller.model.broker.username)
+
+        Label(broker_data_frame, text="Display Name: ").grid(row=3, column=0)
+        self.entry_name = Entry(broker_data_frame, width=70)
+        self.entry_name.grid(row=3, column=1)
+        self.entry_name.insert(0, controller.model.broker.name)
+
+        Label(broker_data_frame, text="Password: ").grid(row=4, column=0)
+        self.entry_password = Entry(broker_data_frame, show="*", width=70)
+        self.entry_password.grid(row=4, column=1)
+        self.entry_password.insert(0, controller.model.broker.password)
+
+        self.label_response = Label(self, textvariable=self.responseText)
+        self.label_response.pack(side=BOTTOM)
+
+        self.label_response = Label(self, textvariable=self.responseText)
+        self.label_response.pack(side=BOTTOM)
+
+    def Save(self, controller):
+        broker_data = {
+            "API_KEY": self.entry_API_KEY.get(),
+            "API_SECRET": self.entry_API_SECRET.get(),
+            "username": self.entry_username.get(),
+            "name": self.entry_name.get(),
+            "password": self.entry_password.get()
+        }
+
+        response = controller.model.broker.editBroker(broker_data)
+        if response:
+            self.responseText.set("Youre data has been updated successfully !")
+        else:
+            self.responseText.set("Something went wrong !")
 
 
 class EditClientPage(Frame):
@@ -102,7 +191,7 @@ class EditClientPage(Frame):
                              font='Ubuntu 20 bold'
                              )
         label_header.grid(row=0, column=1, ipadx=30)
-        Button(header_frame, text="Save",
+        Button(header_frame, text="Save", bg="blue", fg="white",
                command=lambda: self.Save(params[0], params[1].id)).grid(
                    row=0, column=2, ipadx=30
         )
