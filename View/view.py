@@ -43,7 +43,7 @@ class DashboardPage(Frame):
         label_total_str = Label(self, text="Total Clients Balance:")
         label_total_str.pack(pady=(0, 30), fill=X)
         label_total_num = Label(
-            self, text=str(controller.model.broker.total_balance) + "$")
+            self, text=str(controller.getTotalBalance()) + "$")
         label_total_num.pack(pady=(0, 10), fill=X)
 
         label_clients = Label(self, text="My Clients:")
@@ -67,16 +67,85 @@ class DashboardPage(Frame):
             portfolios.append(portfolio_view)
 
         for p in portfolios:
-            p.grid(row=row_num, column=column_num)
+            p.grid(row=row_num, column=column_num, padx=20, pady=20)
             if(column_num == 2):
                 row_num += 1
                 column_num = 0
             else:
                 column_num += 1
 
-        Button(self, text="Add", bg="green",
+        Button(self, text="Add Client!", bg="green", fg="white",
                command=lambda:
-                   master.switchFrame(AddPortfolioPage, controller)).pack(pady=(10, 10))
+                   master.switchFrame(AddPortfolioPage, controller)).pack(pady=(50, 10))
+
+
+class EditClientPage(Frame):
+    def __init__(self, master, params=None):
+        Frame.__init__(self, master.window)
+        self.responseText = StringVar()
+
+        header_frame = Frame(
+            self, borderwidth=1, highlightthickness=1)
+        header_frame.columnconfigure(0, weight=1)
+        header_frame.columnconfigure(1, weight=1)
+        header_frame.columnconfigure(2, weight=1)
+        header_frame.pack(side="top", fill="both")
+
+        Button(header_frame, text="Back",
+               command=lambda: master.switchFrame(DashboardPage, params[0])).grid(
+                   row=0, column=0, ipadx=30
+        )
+
+        label_header = Label(header_frame,
+                             text="CLIENT INFO",
+                             fg="black",
+                             font='Ubuntu 20 bold'
+                             )
+        label_header.grid(row=0, column=1, ipadx=30)
+        Button(header_frame, text="Save",
+               command=lambda: self.Save(params[0], params[1].id)).grid(
+                   row=0, column=2, ipadx=30
+        )
+
+        client_data_frame = Frame(
+            self, borderwidth=1, highlightthickness=1)
+        client_data_frame.pack(fill="both", pady=50)
+
+        Label(client_data_frame, text="First Name:").grid(row=0, column=0)
+        self.entry_fname = Entry(client_data_frame)
+        self.entry_fname.grid(row=0, column=1)
+        self.entry_fname.insert(0, params[1].client.first_name)
+
+        Label(client_data_frame, text="Last Name:").grid(row=1, column=0)
+        self.entry_lname = Entry(client_data_frame)
+        self.entry_lname.grid(row=1, column=1)
+        self.entry_lname.insert(0, params[1].client.last_name)
+
+        Label(client_data_frame, text="Email:").grid(row=2, column=0)
+        self.entry_email = Entry(client_data_frame)
+        self.entry_email.grid(row=2, column=1)
+        self.entry_email.insert(0, params[1].client.email)
+
+        Label(client_data_frame, text="Phone:").grid(row=3, column=0)
+        self.entry_phone = Entry(client_data_frame)
+        self.entry_phone.grid(row=3, column=1)
+        self.entry_phone.insert(0, params[1].client.phone)
+
+        self.label_response = Label(self, textvariable=self.responseText)
+        self.label_response.pack(side=BOTTOM)
+
+    def Save(self, controller, portfolio_id):
+        client = {
+            "first_name": self.entry_fname.get(),
+            "last_name": self.entry_lname.get(),
+            "email": self.entry_email.get(),
+            "phone": self.entry_phone.get()
+        }
+        response = controller.model.broker.editClient(portfolio_id, client)
+        if response:
+            self.responseText.set("Client Updated Successfully !")
+        else:
+            self.responseText.set("Something went wrong !")
 
 
 class AddPortfolioPage(Frame):
@@ -91,17 +160,32 @@ class AddPortfolioPage(Frame):
         }
 
         self.max_start_balance = 10000
+        header_frame = Frame(
+            self, borderwidth=1, highlightthickness=1)
+        header_frame.pack(side="top", fill="both")
 
-        label_header = Label(self,
-                             text="Welcome, " + controller.model.broker.name + "!",
+        Button(header_frame, text="Back",
+               command=lambda: master.switchFrame(DashboardPage, controller)).grid(
+                   row=0, column=0, ipadx=30
+        )
+
+        label_header = Label(header_frame,
+                             text="Add Portfolio",
                              fg="black",
                              font='Ubuntu 20 bold'
                              )
-        label_header.pack(pady=(0, 20), fill=X)
+        label_header.grid(
+            row=0, column=1, ipadx=30
+        )
+
+        Button(header_frame, text="Add!", bg="blue", fg="white",
+               command=lambda: self.Add(entries, master, controller)).grid(
+            row=0, column=2, ipadx=30
+        )
 
         entry_start_balance = EntryWithPlaceholder(
             self, "Start Balance in $ ...")
-        entry_start_balance.pack(pady=(10, 10))
+        entry_start_balance.pack(pady=(50, 10))
 
         entry_first_name = EntryWithPlaceholder(
             self, "Client's first name ...")
@@ -124,8 +208,9 @@ class AddPortfolioPage(Frame):
             entry_phone
         ]
 
-        Button(self, text="Add Portfolio!",
-               command=lambda: self.Add(entries, master, controller)).pack(pady=(100, 10))
+        self.responseText = StringVar()
+        self.response_label = Label(self, textvariable=self.responseText)
+        self.response_label.pack(side=BOTTOM)
 
     def Add(self, entries, master, controller):
         self.portfolioData["start_balance"] = entries[0].get()
@@ -133,9 +218,16 @@ class AddPortfolioPage(Frame):
         self.portfolioData["last_name"] = entries[2].get()
         self.portfolioData["email"] = entries[3].get()
         self.portfolioData["phone"] = entries[4].get()
-        if(self.Validate()):
-            controller.addPortfolio(self.portfolioData)
-            master.switchFrame(DashboardPage, controller)
+        validation = self.Validate()
+        if not validation:
+            self.responseText.set("Wrong Start Balance")
+            return
+        response = controller.addPortfolio(self.portfolioData)
+        if not response:
+            self.responseText.set(
+                "You have reached the maximum amount\n of portfolios that you can manage! ")
+            return
+        self.responseText.set("New Client Added Successfully!")
 
     def Validate(self):
         # check if data ok
@@ -165,15 +257,23 @@ class StartPage(Frame):
         entry_username = EntryWithPlaceholder(self, "Username ...")
         entry_username.pack(pady=(100, 10))
         entry_username.bind(
-            '<Return>', (lambda event: clickLogin(
-                label_connectionMsg, entry_username, entry_password, controller)))
+            '<Return>', (lambda event: [clickLogin(
+                label_connectionMsg,
+                entry_username,
+                entry_password,
+                controller),
+                master.checkAuth(controller)]))
 
         entry_password = EntryWithPlaceholder(
             self, "Password ...", hide_char=True)
         entry_password.pack(pady=10)
         entry_password.bind(
-            '<Return>', (lambda event: clickLogin(
-                label_connectionMsg, entry_username, entry_password, controller)))
+            '<Return>', (lambda event: [clickLogin(
+                label_connectionMsg,
+                entry_username,
+                entry_password,
+                controller),
+                master.checkAuth(controller)]))
 
         button_login = Button(self, text="Log In !",
                               font="Ubuntu 16 bold",
@@ -185,7 +285,7 @@ class StartPage(Frame):
                                   entry_password,
                                   controller),
                                   master.checkAuth(controller)])
-        button_login.pack()
+        button_login.pack(pady=30)
 
         # Create New User
         button_createNewUser = Button(self, text="Register !", font="Ubuntu 12 bold",
@@ -336,8 +436,7 @@ class NewOrderPage(Frame):
             self.entry_price.config(state="disabled")
         else:
             self.entry_price.config(state="normal")
-            
-            
+
     def createOrder(self, params, action):
         self.orderDetails["action"] = action
         self.orderDetails["symbol"] = self.selected.replace("/", "")
@@ -353,15 +452,112 @@ class PortfolioPage(Frame):
         Frame.__init__(self, master.window)
         name = params[1].client.first_name + " " + params[1].client.last_name
 
-        label_header = Label(self,
-                             text=name + " Portfolio:",
+        header_frame = Frame(
+            self, borderwidth=1, highlightthickness=1)
+        header_frame.columnconfigure(0, weight=1)
+        header_frame.columnconfigure(1, weight=1)
+        header_frame.columnconfigure(2, weight=1)
+        header_frame.pack(side="top", fill="both")
+
+        Button(header_frame, text="Back",
+               command=lambda: master.switchFrame(DashboardPage, params[0])).grid(
+                   row=0, column=0, ipadx=30
+        )
+
+        label_header = Label(header_frame,
+                             text=name + " Portfolio",
                              fg="black",
                              font='Ubuntu 20 bold'
                              )
-        label_header.pack(pady=(0, 20), fill=X)
+        label_header.grid(row=0, column=1, ipadx=30)
 
-        Button(self, text="New Order",
-               command=lambda:  master.switchFrame(NewOrderPage, params)).pack(pady=(100, 10))
+        Button(header_frame, text="Delete", fg="white", bg="red",
+               command=lambda:  params[0].model.broker.deletePortfolio(params[1].id)).grid(
+                   row=0, column=2, ipadx=30
+        )
 
-        Button(self, text="Return to Dashboard",
-               command=lambda: master.switchFrame(DashboardPage, params[0])).pack(side="bottom")
+        Label(self,
+              text="Assets",
+              fg="black",
+              font='Ubuntu 14'
+              ).pack(pady=(10, 0), fill=X)
+        self.assets_frame = Frame(self, borderwidth=1, highlightthickness=1)
+        self.insertAssetsData(params[1].assets)
+
+        actions_frame = Frame(
+            self, borderwidth=1, highlightthickness=1)
+        actions_frame.columnconfigure(0, weight=1)
+        actions_frame.columnconfigure(1, weight=1)
+        actions_frame.pack(fill=X)
+        Button(actions_frame, text="Edit Client Info",
+               command=lambda:
+                   master.switchFrame(EditClientPage, params)).grid(row=0, column=0, padx=20)
+        Button(actions_frame, text="Create New Order", fg="white", bg="blue",
+               command=lambda:
+                   master.switchFrame(NewOrderPage, params)).grid(row=0, column=1, padx=20)
+
+        Label(self,
+              text="Open Orders",
+              fg="black",
+              font='Ubuntu 14'
+              ).pack(pady=(15, 0), fill=X)
+        self.frame_open_orders = Frame(
+            self, borderwidth=1, highlightthickness=1)
+        self.InsertOrdersData("OPEN", params[1].orders, self.frame_open_orders)
+
+        Label(self,
+              text="Orders History",
+              fg="black",
+              font='Ubuntu 14'
+              ).pack(pady=(15, 0), fill=X)
+        self.frame_orders_history = Frame(
+            self, borderwidth=1, highlightthickness=1)
+        self.InsertOrdersData(
+            "HISTORY", params[1].orders, self.frame_orders_history)
+
+    def insertAssetsData(self, portfolio_assets):
+        self.assets_frame.columnconfigure(0, weight=1)
+        self.assets_frame.columnconfigure(1, weight=1)
+        row = 0
+        for asset in portfolio_assets:
+            curr_asset = asset[:-3]
+            asset_label = Label(self.assets_frame,
+                                text=curr_asset)
+            asset_label.grid(row=row, column=0, padx=10, pady=2)
+            value_label = Label(self.assets_frame,
+                                text=portfolio_assets[asset])
+            value_label.grid(row=row, column=1, padx=10, pady=2)
+
+            row += 1
+
+        self.assets_frame.pack(pady=(0, 20), fill=X)
+
+    def InsertOrdersData(self, status_flag, portfolio_orders, orders_frame):
+        Label(
+            orders_frame, text="Symbol").grid(row=0, column=0, padx=50, pady=5)
+        Label(
+            orders_frame, text="Amount").grid(row=0, column=1, padx=50, pady=5)
+        Label(
+            orders_frame, text="Status").grid(row=0, column=2, padx=50, pady=5)
+        Label(
+            orders_frame, text="Order ID").grid(row=0, column=3, padx=50, pady=5)
+
+        row = 1
+        for order in portfolio_orders:
+            if status_flag == "OPEN":
+                adding_condition = (order['status'] == 'NEW')
+            else:
+                adding_condition = (order['status'] != 'NEW')
+
+            if (adding_condition):
+                Label(
+                    orders_frame, text=order['symbol']).grid(row=row, column=0, padx=50, pady=2)
+                Label(
+                    orders_frame, text=order['quantity']).grid(row=row, column=1, padx=50, pady=2)
+                Label(
+                    orders_frame, text=order['status']).grid(row=row, column=2, padx=50, pady=2)
+                Label(
+                    orders_frame, text=order['orderId']).grid(row=row, column=3, padx=50, pady=2)
+                row += 1
+
+        orders_frame.pack(pady=(0, 20), fill=X)

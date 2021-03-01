@@ -51,17 +51,17 @@ class Portfolio(object):
                     orders_history.append(order)
         return orders_history
 
-    def buyOrder(self, binance_user, symbol,quantity ):
+    def buyOrder(self, binance_user, symbol, quantity):
         order = binance_user.order_market_buy()
         return order
 
-    def addToOrders(self, order_id, status,symbol, quantity):
+    def addToOrders(self, order_id, status, symbol, quantity):
         order = {"order_id": order_id, "status": status,
-                 "symbol": symbol, "amount": amount}
+                 "symbol": symbol, "amount": quantity}
         self.orders.append(order)
 
-    
     def __str__(self):
-        str ="Start_balance  - {} \nCurrent_balance - {}\n"\
-               "Client : \n{} \nOrders - {}\nAssets - {} \n".format(self.start_balance, self.current_balance,self.client,self.orders ,self.assets)
-        return  str
+        str = "Start_balance  - {} \nCurrent_balance - {}\n"\
+            "Client : \n{} \nOrders - {}\nAssets - {} \n".format(
+                self.start_balance, self.current_balance, self.client, self.orders, self.assets)
+        return str

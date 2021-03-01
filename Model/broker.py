@@ -103,12 +103,15 @@ class Broker:
         return self.binance_client.get_account()['balances']
 
     def addPortfolio(self, newPortData):
+        if(len(self.portfolios) > 6):
+            return False
         id = self.next_portfolio_id
         self.next_portfolio_id += 1
         newPortData["id"] = id
         new_portfolio = Portfolio().New(newPortData)
         self.portfolios.append(new_portfolio)
         self.saveData()
+        return True
 
     def saveNewOrder(self, portfolio_id, order):
         orderToSave = {"orderId": order["orderId"], "symbol": order["symbol"],
@@ -119,6 +122,16 @@ class Broker:
                 self.saveData()
                 return
         raise Exception("There is no such portfolio id ")
+
+    def getPorfolioBalance(self, portfolio_id):
+        total = 0
+        for porfolio in self.portfolios:
+            if porfolio.id == portfolio_id:
+                for symbol, quantity in porfolio.assets.items():
+                    symbol = symbol[:-3] + 'USDT'
+                    avrPrice = self.binance_client.get_avg_price(symbol=symbol)
+                    total += float(quantity) * float(avrPrice["price"])
+        return total
 
     def saveNewAset(self, portfolio_id, asset, action):
         for porfolio in self.portfolios:
@@ -136,67 +149,100 @@ class Broker:
                 return
         raise Exception("There is no such portfolio id ")
 
-
     def editClient(self, portfolio_id, client):
-        for porfolio in self.portfolios:
-            if porfolio.id == portfolio_id:
+        for portfolio in self.portfolios:
+            if portfolio.id == portfolio_id:
                 portfolio.client.first_name = client["first_name"]
                 portfolio.client.last_name = client["last_name"]
                 portfolio.client.phone = client["phone"]
                 portfolio.client.email = client["email"]
                 self.saveData()
-                return
+                return True
         raise Exception("There is no such portfolio id ")
-        
+        return False
 
-    def upDateAllAssets(self):
+    def updateAllAssets(self):
         for portfolio in self.portfolios:
             for order in portfolio.orders:
-                currOrder = self.binance_client.get_order(symbol=order["symbol"],orderId=order['orderId'])
+                currOrder = self.binance_client.get_order(
+                    symbol=order["symbol"], orderId=order['orderId'])
                 if order["status"] != currOrder["status"]:
-                    order["status"] = currOrder["status"]       
+                    order["status"] = currOrder["status"]
                     if currOrder["status"] == 'FILLED':
-                        asset = {"symbol":currOrder["symbol"] , "amount": currOrder["executedQty"]}
+                        asset = {
+                            "symbol": currOrder["symbol"], "amount": currOrder["executedQty"]}
                         if currOrder["side"] == "BUY":
                             action = "Buy"
                         else:
                             action = "Sell"
-                        saveNewAset(portfolio.id,asset,action)
-        
+                        saveNewAset(portfolio.id, asset, action)
 
-    def allowedToSell(portfolio_id,orderDetails):
-        for porfolio in self.portfolios :
+    def allowedToSell(self, portfolio_id, orderDetails):
+        for porfolio in self.portfolios:
             if porfolio.id == portfolio_id:
-                if asset["symbol"] in porfolio.assets :
-                    if porfolio.assets[orderDetails["symbol"]] > orderDetails["quantity"]
+                if orderDetails["symbol"] in porfolio.assets:
+                    if porfolio.assets[orderDetails["symbol"]] > orderDetails["quantity"]:
                         return True
-        return False           
+        return False
 
-    def createOrder(self,portfolio_id,orderDetails):
-        self.upDateAllAssets()
+    def createOrder(self, portfolio_id, orderDetails):
+        self.updateAllAssets()
         try:
             if orderDetails["type"] == "M":
                 if orderDetails["action"] == "Buy":
-                    order = self.binance_client.order_market_buy(symbol = orderDetails["symbol"] , quantity = orderDetails["quantity"])
-                else:      
-                    allow = self.allowedToSell(portfolio_id,orderDetails)
+                    order = self.binance_client.order_market_buy(
+                        symbol=orderDetails["symbol"], quantity=orderDetails["quantity"])
+                else:
+                    allow = self.allowedToSell(portfolio_id, orderDetails)
                     if allow == True:
-                        order = self.binance_client.order_market_sell(symbol = orderDetails["symbol"] , quantity = orderDetails["quantity"])
+                        order = self.binance_client.order_market_sell(
+                            symbol=orderDetails["symbol"], quantity=orderDetails["quantity"])
             else:
                 if orderDetails["action"] == "Buy":
-                    order = self.binance_client.order_limit_buy(symbol = orderDetails["symbol"] , quantity = orderDetails["quantity"],price = orderDetails["price"] )
+                    order = self.binance_client.order_limit_buy(
+                        symbol=orderDetails["symbol"], quantity=orderDetails["quantity"], price=orderDetails["price"])
                 else:
-                    allow = self.allowedToSell(portfolio_id,orderDetails)
+                    allow = self.allowedToSell(portfolio_id, orderDetails)
                     if allow == True:
-                        order = self.binance_client.order_limit_sell(symbol = orderDetails["symbol"] , quantity = orderDetails["quantity"],price = orderDetails["price"] )
-            self.saveNewOrder(portfolio_id,order)
+                        order = self.binance_client.order_limit_sell(
+                            symbol=orderDetails["symbol"], quantity=orderDetails["quantity"], price=orderDetails["price"])
+            self.saveNewOrder(portfolio_id, order)
             if order["status"] == "FILLED" or order["status"] == "PARTIALLY_FILLED":
-                asset = {"symbol":order["symbol"] , "amount": order["executedQty"]}
-                self.saveNewAset(portfolio_id,asset,orderDetails["action"])
+                asset = {"symbol": order["symbol"],
+                         "amount": order["executedQty"]}
+                self.saveNewAset(portfolio_id, asset, orderDetails["action"])
             print(order)
         except Exception as e:
-                print(e)
+            print(e)
         return
+
+    def getAllTickers(self):
+        return self.binance_client.get_all_tickers()
+
+    def getTotalBalance(self):
+        return self.binance_client.get_account()['balances']
+
+    def getTotalUsdValue(self):
+        total = 0
+        all_balances = self.getTotalBalances()
+        all_tickers = self.getAllTickers()
+        for asset in all_balances:
+            total_asset_balance = float(asset['free']) + float(asset['locked'])
+            for symbol in all_tickers:
+                if symbol['symbol'] == asset['asset'] + 'USDT':
+                    total += total_asset_balance * float(symbol['price'])
+        total = "{:.2f}".format(total)
+        self.total_balance = total
+        self.saveData()
+        return total
+
+    def getPortfoliioByID(self, id):
+        if self.portfolios == []:
+            return None
+        for portFolio in self.portfolios:
+            if portFolio.id == id:
+                return portFolio
+        return None
 
     # def editClientPhone(self,portfolio_id,client_phone):
     #     pass
@@ -213,31 +259,6 @@ class Broker:
     #         if portfolio.id > max_id:
     #             max_id = portfolio.id
     #     return max_id + 1
-
-    def getAllTickers(self):
-        return self.binance_client.get_all_tickers()
-
-    def getTotalBalance(self):
-        return self.binance_client.get_lending_account()
-
-    def getTotalUsdValue(self):
-        total = 0
-        all_balances = self.getTotalBalances()
-        all_tickers = self.getAllTickers()
-        for asset in all_balances:
-            total_asset_balance = float(asset['free']) + float(asset['locked'])
-            for symbol in all_tickers:
-                if symbol['symbol'] == asset['asset'] + 'USDT':
-                    total += total_asset_balance * float(symbol['price'])
-        return total
-
-    def getPortfoliioByID(self, id):
-        if self.portfolios == []:
-            return None
-        for portFolio in self.portfolios:
-            if portFolio.id == id:
-                return portFolio
-        return None
 
     # def getMaxPortfolioID(self):
     #     if self.portfolios == []:

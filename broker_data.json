@@ -2,10 +2,10 @@
     "name": "David",
     "API_KEY": "MAVi1uReYpALWuxi0LqU17mJRWgud1z1oYIhC5uZHusvCsHf6e4YNGzE0eCI17Cl",
     "API_SECRET": "Ke4InMoSV2ctF0c1Hih2yCwV1YXrdlVsEseeat1o4vdRyU7qztT5k6UW0XqVBzci",
-    "total_balance": 1000,
+    "total_balance": "454.87",
     "free_balance": 1000,
-    "next_portfolio_id": 8,
-    "username": "Omri",
+    "next_portfolio_id": 5,
+    "username": "omri",
     "password": "1",
     "portfolios": [
         {
@@ -14,22 +14,10 @@
             "assets": {},
             "orders": [],
             "client": {
-                "first_name": "DAVID",
-                "last_name": "TSIBULSKY",
-                "phone": "23124324",
-                "email": "ASDSD@ADA.SD"
-            }
-        },
-        {
-            "id": 2,
-            "start_balance": "32",
-            "assets": {},
-            "orders": [],
-            "client": {
-                "first_name": "dsd",
-                "last_name": "fw",
-                "phone": "5342267757",
-                "email": "fdwef@dcwd.22"
+                "first_name": "David",
+                "last_name": "Tsibulsky",
+                "phone": "0523124324",
+                "email": "david123@gmail.com"
             }
         },
         {
@@ -45,19 +33,7 @@
             }
         },
         {
-            "id": 4,
-            "start_balance": 99.0,
-            "assets": {},
-            "orders": [],
-            "client": {
-                "first_name": "Shimi",
-                "last_name": "Shimoni",
-                "phone": "0526999779",
-                "email": "s@gmail.com"
-            }
-        },
-        {
-            "id": 5,
+            "id": 2,
             "start_balance": "2000",
             "assets": {
                 "BNBBTC": 0.1,
@@ -87,37 +63,19 @@
                     "symbol": "ETHBTC",
                     "quantity": "0.02000000",
                     "status": "FILLED"
+                },
+                {
+                    "orderId": 789240331,
+                    "symbol": "BNBBTC",
+                    "quantity": "0.10000000",
+                    "status": "NEW"
                 }
             ],
             "client": {
-                "first_name": "Chiko",
-                "last_name": "VeDico",
-                "phone": "052052052",
-                "email": "mail@gmail.com"
-            }
-        },
-        {
-            "id": 6,
-            "start_balance": "4000",
-            "assets": {},
-            "orders": [],
-            "client": {
-                "first_name": "ABC",
-                "last_name": "EFG",
-                "phone": "65465",
-                "email": "afs@sdg.com"
-            }
-        },
-        {
-            "id": 7,
-            "start_balance": "123",
-            "assets": {},
-            "orders": [],
-            "client": {
-                "first_name": "123",
-                "last_name": "123",
-                "phone": "123",
-                "email": "123"
+                "first_name": "Elon",
+                "last_name": "Mask",
+                "phone": "0540000000",
+                "email": "ElonMask@gmail.com"
             }
         }
     ]
