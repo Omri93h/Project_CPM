@@ -100,18 +100,20 @@ class Broker:
                 return
         print(f"Could Not Find Portfolio ID {portfolio_id}")
 
-    def updateCurrentBalance(self,portfolio_id,order):
-        totalChangeBTC = float(order["fills"][0]["price"])*float(order["fills"][0]["qty"])
+    def updateCurrentBalance(self, portfolio_id, order):
+        if order == None:
+            return False
+        totalChangeBTC = float(
+            order["fills"][0]["price"])*float(order["fills"][0]["qty"])
         btcUsdt = self.binance_client.get_avg_price(symbol="BTCUSDT")
         totalChangeUSDT = float(totalChangeBTC) * float(btcUsdt["price"])
-        for porfolio in self.portfolios :
-            if porfolio.id == portfolio_id: 
+        for porfolio in self.portfolios:
+            if porfolio.id == portfolio_id:
                 if order["side"] == "BUY":
                     porfolio.current_balance -= totalChangeUSDT
                 else:
                     porfolio.current_balance += totalChangeUSDT
         self.saveData()
-
 
     def getTotalBalances(self):
         return self.binance_client.get_account()['balances']
@@ -191,20 +193,20 @@ class Broker:
                 if order["status"] != currOrder["status"]:
                     order["status"] = currOrder["status"]
                     if currOrder["status"] == 'FILLED':
-                        self.updateCurrentBalance(portfolio_id,currOrder)
+                        self.updateCurrentBalance(portfolio.id, currOrder)
                         asset = {
                             "symbol": currOrder["symbol"], "amount": currOrder["executedQty"]}
                         if currOrder["side"] == "BUY":
                             action = "Buy"
                         else:
                             action = "Sell"
-                        saveNewAset(portfolio.id, asset, action)
+                        self.saveNewAset(portfolio.id, asset, action)
 
     def allowedToSell(self, portfolio_id, orderDetails):
         for porfolio in self.portfolios:
             if porfolio.id == portfolio_id:
                 if orderDetails["symbol"] in porfolio.assets:
-                    if porfolio.assets[orderDetails["symbol"]] > orderDetails["quantity"]:
+                    if float(porfolio.assets[orderDetails["symbol"]]) > float(orderDetails["quantity"]):
                         return True
         return False
 
@@ -233,11 +235,13 @@ class Broker:
             if order["status"] == "FILLED" or order["status"] == "PARTIALLY_FILLED":
                 asset = {"symbol": order["symbol"],
                          "amount": order["executedQty"]}
-                self.updateCurrentBalance(portfolio_id,order)
+                self.updateCurrentBalance(portfolio_id, order)
                 self.saveNewAset(portfolio_id, asset, orderDetails["action"])
-            print(order)
+
+            return True
         except Exception as e:
             print(e)
+            return False
         return
 
     def getAllTickers(self):
