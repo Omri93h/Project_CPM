@@ -134,8 +134,7 @@ class Broker:
         raise Exception("There is no such portfolio id ")
         
 
-    def upDateAllAssets(self):
-        
+    def upDateAllAssets(self): 
         pass 
 
     def editClient(self,portfolio_id,client):
@@ -150,7 +149,20 @@ class Broker:
         raise Exception("There is no such portfolio id ")
         
 
-
+    def upDateAllAssets(self):
+        for portfolio in self.portfolios:
+            for order in portfolio.orders:
+                currOrder = self.binance_client.get_order(symbol=order["symbol"],orderId=order['orderId'])
+                if order["status"] != currOrder["status"]:
+                    order["status"] = currOrder["status"]       
+                    if currOrder["status"] == 'FILLED':
+                        asset = {"symbol":currOrder["symbol"] , "amount": currOrder["executedQty"]}
+                        if currOrder["side"] == "BUY":
+                            action = "Buy"
+                        else:
+                            action = "Sell"
+                        saveNewAset(portfolio.id,asset,action)
+        
 
     def createOrder(self,portfolio_id,orderDetails):
         try:
