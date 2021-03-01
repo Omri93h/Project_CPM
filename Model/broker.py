@@ -164,30 +164,38 @@ class Broker:
                         saveNewAset(portfolio.id,asset,action)
         
 
+    def allowedToSell(portfolio_id,orderDetails):
+        for porfolio in self.portfolios :
+            if porfolio.id == portfolio_id:
+                if asset["symbol"] in porfolio.assets :
+                    if porfolio.assets[orderDetails["symbol"]] > orderDetails["quantity"]
+                        return True
+        return False           
+
     def createOrder(self,portfolio_id,orderDetails):
+        self.upDateAllAssets()
         try:
             if orderDetails["type"] == "M":
                 if orderDetails["action"] == "Buy":
-                    order = self.binance_client.order_market_buy(
-                        symbol=orderDetails["symbol"], quantity=orderDetails["quantity"])
-                else:
-                    order = self.binance_client.order_market_sell(
-                        symbol=orderDetails["symbol"], quantity=orderDetails["quantity"])
+                    order = self.binance_client.order_market_buy(symbol = orderDetails["symbol"] , quantity = orderDetails["quantity"])
+                else:      
+                    allow = self.allowedToSell(portfolio_id,orderDetails)
+                    if allow == True:
+                        order = self.binance_client.order_market_sell(symbol = orderDetails["symbol"] , quantity = orderDetails["quantity"])
             else:
                 if orderDetails["action"] == "Buy":
-                    order = self.binance_client.order_limit_buy(
-                        symbol=orderDetails["symbol"], quantity=orderDetails["quantity"], price=orderDetails["price"])
+                    order = self.binance_client.order_limit_buy(symbol = orderDetails["symbol"] , quantity = orderDetails["quantity"],price = orderDetails["price"] )
                 else:
-                    order = self.binance_client.order_limit_sell(
-                        symbol=orderDetails["symbol"], quantity=orderDetails["quantity"], price=orderDetails["price"])
-            self.saveNewOrder(portfolio_id, order)
+                    allow = self.allowedToSell(portfolio_id,orderDetails)
+                    if allow == True:
+                        order = self.binance_client.order_limit_sell(symbol = orderDetails["symbol"] , quantity = orderDetails["quantity"],price = orderDetails["price"] )
+            self.saveNewOrder(portfolio_id,order)
             if order["status"] == "FILLED" or order["status"] == "PARTIALLY_FILLED":
-                asset = {"symbol": order["symbol"],
-                         "amount": order["executedQty"]}
-                self.saveNewAset(portfolio_id, asset, orderDetails["action"])
+                asset = {"symbol":order["symbol"] , "amount": order["executedQty"]}
+                self.saveNewAset(portfolio_id,asset,orderDetails["action"])
             print(order)
         except Exception as e:
-            print(e)
+                print(e)
         return
 
     # def editClientPhone(self,portfolio_id,client_phone):
