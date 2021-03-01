@@ -1,10 +1,10 @@
 {
     "name": "David",
-    "API_KEY": "Fh8JhgtmVM6RyazesS0sl9IkMWPD7KLXqF8Gz0E5CJRlgDt4rgry2EJDYajeebZM",
-    "API_SECRET": "RSvGFTiUXGwTS1b1JrCm3p92wNF9lJi3e80xcrpJDmAHiIATGglPtp8PLYqmsaWJ",
+    "API_KEY": "MAVi1uReYpALWuxi0LqU17mJRWgud1z1oYIhC5uZHusvCsHf6e4YNGzE0eCI17Cl",
+    "API_SECRET": "Ke4InMoSV2ctF0c1Hih2yCwV1YXrdlVsEseeat1o4vdRyU7qztT5k6UW0XqVBzci",
     "total_balance": 1000,
     "free_balance": 1000,
-    "next_portfolio_id": 7,
+    "next_portfolio_id": 8,
     "username": "Omri",
     "password": "1",
     "portfolios": [
@@ -78,6 +78,18 @@
                 "last_name": "EFG",
                 "phone": "65465",
                 "email": "afs@sdg.com"
+            }
+        },
+        {
+            "id": 7,
+            "start_balance": "123",
+            "assets": {},
+            "orders": [],
+            "client": {
+                "first_name": "123",
+                "last_name": "123",
+                "phone": "123",
+                "email": "123"
             }
         }
     ]

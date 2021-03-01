@@ -285,8 +285,13 @@ class PortfolioPage(Frame):
     def __init__(self, master, params=None):
         Frame.__init__(self, master.window)
         name = params[1].client.first_name + " " + params[1].client.last_name
-        Label(self, text=name + " Portfolio:").pack(
-            side="top", fill="x", pady=10)
+        
+        label_header = Label(self,
+                text=name + " Portfolio:",
+                fg="black",
+                font='Ubuntu 20 bold'
+                )
+        label_header.pack(pady=(0, 20), fill=X)
 
         Button(self, text="New Order",
                command=lambda:  master.switchFrame(NewOrderPage, params)).pack(pady=(100, 10))
