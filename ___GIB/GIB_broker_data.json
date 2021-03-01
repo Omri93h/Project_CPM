@@ -1,0 +1,51 @@
+{
+    "name": "Omri Haham",
+    "API_KEY": "MAVi1uReYpALWuxi0LqU17mJRWgud1z1oYIhC5uZHusvCsHf6e4YNGzE0eCI17Cl",
+    "API_SECRET": "Ke4InMoSV2ctF0c1Hih2yCwV1YXrdlVsEseeat1o4vdRyU7qztT5k6UW0XqVBzci",
+    "total_balance": "459.53",
+    "free_balance": 1000,
+    "next_portfolio_id": 5,
+    "username": "omri",
+    "password": "1",
+    "portfolios": [
+        {
+            "id": 1,
+            "start_balance": "32",
+            "current_balance": 32,
+            "assets": {},
+            "orders": [],
+            "client": {
+                "first_name": "David",
+                "last_name": "Tsibulsky",
+                "phone": "0523124324",
+                "email": "david123@gmail.com"
+            }
+        },
+        {
+            "id": 3,
+            "start_balance": "340",
+            "current_balance": 340,
+            "assets": {},
+            "orders": [],
+            "client": {
+                "first_name": "Omri",
+                "last_name": "Haham",
+                "phone": "657868768",
+                "email": "jkhkj"
+            }
+        },
+        {
+            "id": 2,
+            "start_balance": "2000",
+            "current_balance": 1625.5059100596213,
+            "assets": {},
+            "orders": [],
+            "client": {
+                "first_name": "Elon",
+                "last_name": "Mask",
+                "phone": "0540000000",
+                "email": "Mask@gmail.com"
+            }
+        }
+    ]
+}
