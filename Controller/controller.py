@@ -13,14 +13,12 @@ class Controller():
         self.view.viewPortfolio(portFolio)
 
     def addPortfolio(self, portfolio):
-        try:
-            self.model.broker.addPortfolio(portfolio)
-        except Exception as e:
-            print(e)
+        res = self.model.broker.addPortfolio(portfolio)
+        return res
 
     def getTotalBalance(self):
         return self.model.broker.getTotalUsdValue()
-    
+
     def Dashboard(self):
         choice = None
         while choice is None:
