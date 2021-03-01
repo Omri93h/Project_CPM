@@ -1,6 +1,6 @@
 import json
 import os.path as path
-import requests
+
 from binance.client import Client as binance_client
 
 from .portfolio import *
@@ -25,12 +25,8 @@ class Broker:
                 self.name = broker_data['name']
                 self.username = broker_data['username']
                 self.password = broker_data['password']
-                a = self.get_wallet()
-                print(a)
-                self.total_balance = self.binance_client.response.json()
-                print(self.binance_client.json())
+                self.total_balance = broker_data["total_balance"]
                 self.free_balance = broker_data["free_balance"]
-
                 self.next_portfolio_id = broker_data["next_portfolio_id"]
                 self.portfolios = []
                 self.parsePortfolios(broker_data["portfolios"])
@@ -59,10 +55,6 @@ class Broker:
                 return json.load(json_file)
         else:
             return {}
-
-    def get_wallet(self, **params):
-        a = requests.get('https://api.binance.com/sapi/v1/accountSnapshot')
-        print(a)
 
     def saveData(self):
         broker_data = {
@@ -170,10 +162,10 @@ class Broker:
             else:
                 if orderDetails["action"] == "Buy":
                     order = self.binance_client.order_limit_buy(
-                        ymbol=orderDetails["symbol"], quantity=orderDetails["quantity"], price=orderDetails["price"])
+                        symbol=orderDetails["symbol"], quantity=orderDetails["quantity"], price=orderDetails["price"])
                 else:
                     order = self.binance_client.order_limit_sell(
-                        ymbol=orderDetails["symbol"], quantity=orderDetails["quantity"], price=orderDetails["price"])
+                        symbol=orderDetails["symbol"], quantity=orderDetails["quantity"], price=orderDetails["price"])
             self.saveNewOrder(portfolio_id, order)
             if order["status"] == "FILLED" or order["status"] == "PARTIALLY_FILLED":
                 asset = {"symbol": order["symbol"],
@@ -204,7 +196,6 @@ class Broker:
         return self.binance_client.get_all_tickers()
 
     def getTotalBalance(self):
-        print(self.binance_client.get_open_orders())
         return self.binance_client.get_lending_account()
 
     def getTotalUsdValue(self):
