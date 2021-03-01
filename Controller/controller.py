@@ -14,8 +14,6 @@ class Controller():
 
     def addPortfolio(self, portfolio):
         try:
-            # newPortData = self.view.portfolioForm(
-            #     self.model.broker.Total_Balance)
             self.model.broker.addPortfolio(portfolio)
         except Exception as e:
             print(e)

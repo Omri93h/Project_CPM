@@ -33,13 +33,18 @@ class View(Tk):
 class DashboardPage(Frame):
     def __init__(self, master, controller, params=None):
         Frame.__init__(self, master.window)
+        label_header = Label(self,
+                             text="Welcome, " + controller.model.broker.name + "!",
+                             fg="black",
+                             font='Ubuntu 20 bold'
+                             )
+        label_header.pack(pady=(0, 20), fill=X)
 
-        label_total_header = Label(self, text="Total Clients Balance:")
-
-        label_total_header.pack(pady=(0, 10), fill=X)
-        label_total = Label(
+        label_total_str = Label(self, text="Total Clients Balance:")
+        label_total_str.pack(pady=(0, 30), fill=X)
+        label_total_num = Label(
             self, text=str(controller.model.broker.total_balance) + "$")
-        label_total.pack(pady=(0, 10), fill=X)
+        label_total_num.pack(pady=(0, 10), fill=X)
 
         label_clients = Label(self, text="My Clients:")
         label_clients.pack(pady=(0, 10), fill=X)
@@ -87,8 +92,12 @@ class AddPortfolioPage(Frame):
 
         self.max_start_balance = 10000
 
-        label_page_header = Label(self, text="Add Portfolio:")
-        label_page_header.pack(pady=(10, 50), fill=X)
+        label_header = Label(self,
+                             text="Welcome, " + controller.model.broker.name + "!",
+                             fg="black",
+                             font='Ubuntu 20 bold'
+                             )
+        label_header.pack(pady=(0, 20), fill=X)
 
         entry_start_balance = EntryWithPlaceholder(
             self, "Start Balance in $ ...")
@@ -127,7 +136,6 @@ class AddPortfolioPage(Frame):
         if(self.Validate()):
             controller.addPortfolio(self.portfolioData)
             master.switchFrame(DashboardPage, controller)
-            
 
     def Validate(self):
         # check if data ok
@@ -231,6 +239,14 @@ class NewOrderPage(Frame):
 
         self.price = StringVar(self)
         self.price.set("")
+        self.selected = StringVar(self)
+        self.orderDetails = {
+            "type": "M",
+            "action": None,
+            "quantity": None,
+            "symbol": None,
+            "price": None
+        }
 
         Label(self, text="Choose Symbol:").pack(
             side="top", fill="x", pady=10)
@@ -247,38 +263,102 @@ class NewOrderPage(Frame):
         variable = StringVar(self)
         dropdown = ttk.OptionMenu(
             self, variable, SYMBOLS[0], *SYMBOLS, command=self.Callback, style='my.TMenubutton')
+        self.selected = SYMBOLS[0]
         dropdown['menu'].configure(bg="white", font=('futura', 20))
-        dropdown.pack(pady=(100, 10))
+        dropdown.pack(pady=(30, 10))
 
-        Label(self, text="Price:").pack(
+        Label(self, text="Current Price:").pack(
             side="top", fill="x", pady=10)
-
         Label(self, textvariable=self.price).pack(
             side="top", fill="x", pady=10)
 
-        entry_amount = EntryWithPlaceholder(self, "Amount ...")
-        entry_amount.pack(pady=(50, 10))
+        # Label(frame_order_types, text="Market Order:").grid(
+        #     row=0, column=0)
+        # Label(frame_order_types, text="Limit Order:").grid(
+        #     row=0, column=1)
 
-        Button(self, text="BUY", bg="green",
-               command=lambda:  master.switchFrame(NewOrderPage, params)).pack(pady=(10, 10))
+        # ORDER_TYPES = [
+        #     "Market",
+        #     "Limit"
+        # ]
 
-        Button(self, text="SELL", bg="red",
-               command=lambda:  master.switchFrame(NewOrderPage, params)).pack(pady=(10, 10))
+        # w = Radiobutton(self, "Market")
+        # w.pack()
+
+        frame_order_type = Frame(self, borderwidth=5, highlightthickness=2)
+        frame_order_type.config(highlightbackground="grey")
+        frame_order_type.pack()
+        self.order_type = StringVar()
+        self.order_type.set("M")
+
+        self.entry_amount = EntryWithPlaceholder(self, "Amount ...")
+        self.entry_price = EntryWithPlaceholder(self, "Price ...")
+        self.entry_price.config(state="disabled")
+
+        Radiobutton(
+            frame_order_type, variable=self.order_type, value="M",
+            command=lambda: self.switchOrderType("M")).grid(
+            row=0, column=0)
+        Label(
+            frame_order_type, text="Market").grid(row=0, column=1)
+        Radiobutton(
+            frame_order_type, variable=self.order_type, value="L", tristatevalue=0,
+            command=lambda: self.switchOrderType("L")).grid(
+            row=1, column=0)
+        Label(
+            frame_order_type, text="Limit").grid(row=1, column=1)
+
+        self.entry_amount.pack(pady=(50, 10))
+        self.entry_price.pack(pady=(10, 10))
+
+        frame_order_action = Frame(self, borderwidth=0, highlightthickness=0)
+        frame_order_action.config(highlightbackground="grey")
+        frame_order_action.pack(side="top")
+
+        Button(frame_order_action, text="BUY", bg="green",
+               command=lambda:  self.createOrder(params, "Buy")).grid(
+            row=0, column=0, padx=20, pady=10)
+
+        Button(frame_order_action, text="SELL", bg="red",
+               command=lambda:  self.createOrder(params, "Sell")).grid(
+            row=0, column=1, padx=10, pady=10)
 
         Button(self, text="Return to Dashboard",
-               command=lambda: master.switchFrame(DashboardPage, params[0])).pack(pady=(100, 10))
+               command=lambda: master.switchFrame(DashboardPage, params[0])).pack(pady=(50, 10))
 
     def Callback(self, selected):
-        print(selected)
+        self.selected = selected
         self.price.set("New Price")
+
+    def switchOrderType(self, order_type):
+        self.order_type.set(order_type)
+        if order_type == "M":
+            self.entry_price.config(state="disabled")
+        else:
+            self.entry_price.config(state="normal")
+            
+            
+    def createOrder(self, params, action):
+        self.orderDetails["action"] = action
+        self.orderDetails["symbol"] = self.selected.replace("/", "")
+        self.orderDetails["quantity"] = self.entry_amount.get()
+        self.orderDetails["type"] = self.order_type.get()
+        self.orderDetails["price"] = self.entry_price.get()
+        params[0].model.broker.createOrder(
+            params[1].id, self.orderDetails)
 
 
 class PortfolioPage(Frame):
     def __init__(self, master, params=None):
         Frame.__init__(self, master.window)
         name = params[1].client.first_name + " " + params[1].client.last_name
-        Label(self, text=name + " Portfolio:").pack(
-            side="top", fill="x", pady=10)
+
+        label_header = Label(self,
+                             text=name + " Portfolio:",
+                             fg="black",
+                             font='Ubuntu 20 bold'
+                             )
+        label_header.pack(pady=(0, 20), fill=X)
 
         Button(self, text="New Order",
                command=lambda:  master.switchFrame(NewOrderPage, params)).pack(pady=(100, 10))

@@ -53,7 +53,6 @@ def clickLogin(label_connectionMsg, entry_username, entry_password, controller):
 
     username = entry_username.get()
     password = entry_password.get()
-    # auth_data = getUsernameAndPassword()
 
     if not controller.model.auth.isAllowed():
         if (controller.model.broker.username == username and
@@ -70,11 +69,6 @@ def clickLogin(label_connectionMsg, entry_username, entry_password, controller):
 
     label_connectionMsg.configure(text=msg, fg=fg)
     label_connectionMsg.pack(pady=10)
-
-    # if controller.model.auth.isAllowed():
-    #     next_page.lift()
-
-    # return is_authorized
 
 
 # App Configurations
